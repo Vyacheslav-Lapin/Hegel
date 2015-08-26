@@ -1,11 +1,15 @@
-package com.gegel.xpath;
+package com.hegel.xpath;
 
+import junit.framework.TestCase;
 import org.junit.Test;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 
-import static com.gegel.xpath.XPathQueryExecutor.stream;
 import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.joining;
 import static junit.framework.TestCase.assertEquals;
+import static org.jsoup.Connection.Method.GET;
 
 /**
  * @author Vyacheslav Lapin (http://vlapin.ru)
@@ -19,22 +23,39 @@ public class XPathTests {
 
     @Test
     public void xPathQueryAsObject() {
-        assertEquals(
+        TestCase.assertEquals(
                 "tpEventMessageConverter, tpEventObjectFactory, upstreamNewMessageEvent, nullFilter, waitObject",
-                stream(XML, X_PATH).collect(joining(", ")));
+                new XPathQueryExecutor().stream(XML, X_PATH).collect(joining(", ")));
     }
 
     @Test
     public void invokeRootNamespace() {
         assertEquals(
                 "http://www.springframework.org/schema/beans",
-                Xml.from(get(XML_FILE_PATH)).getRootNamespaceURI().get());
+                Xml.fromFilePath(get(XML_FILE_PATH)).getRootNamespaceURI().get());
     }
 
     @Test
     public void xPathQuery() {
         assertEquals(
                 "tpEventMessageConverter, tpEventObjectFactory, upstreamNewMessageEvent, nullFilter, waitObject",
-                XPathQuery.from(X_PATH).stream(get(XML_FILE_PATH)).collect(joining(", ")));
+                new XPathQuery(X_PATH).stream(get(XML_FILE_PATH)).collect(joining(", ")));
+    }
+
+    @Test
+    public void xPathQueryToURL() throws MalformedURLException {
+
+        URL url = new URL("http://vlapin.ru/");
+
+        HashMap<String, String> headers = new HashMap<>();
+
+
+        assertEquals(
+                "http://www.w3.org/1999/xhtml",
+                Xhtml.fromUrl(url, headers, GET, 3000)
+                        .getRootNamespaceURI().get());
+
+        // https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Reflect
+        // article[@id='wikiArticle']/(p[text()]|h2)
     }
 }

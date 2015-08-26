@@ -13,6 +13,8 @@
 
     <properties>
         <Saxon-HE.version>9.6.0-6</Saxon-HE.version>
+        <jsoup.version>1.8.3</jsoup.version>
+        <htmlcleaner.version>2.14</htmlcleaner.version>
     </properties>
 
     <dependencies>
@@ -20,6 +22,18 @@
             <groupId>net.sf.saxon</groupId>
             <artifactId>Saxon-HE</artifactId>
             <version>${Saxon-HE.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.htmlcleaner</groupId>
+            <artifactId>htmlcleaner</artifactId>
+            <version>${htmlcleaner.version}</version>
         </dependency>
     </dependencies>
 
