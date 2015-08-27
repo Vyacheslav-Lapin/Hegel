@@ -32,7 +32,7 @@ public class XPathTests {
     public void invokeRootNamespace() {
         assertEquals(
                 "http://www.springframework.org/schema/beans",
-                Xml.fromFilePath(get(XML_FILE_PATH)).getRootNamespaceURI().get());
+                new Xml(get(XML_FILE_PATH)).getRootNamespaceURI().get());
     }
 
     @Test
@@ -44,18 +44,9 @@ public class XPathTests {
 
     @Test
     public void xPathQueryToURL() throws MalformedURLException {
-
-        URL url = new URL("http://vlapin.ru/");
-
-        HashMap<String, String> headers = new HashMap<>();
-
-
         assertEquals(
                 "http://www.w3.org/1999/xhtml",
-                Xhtml.fromUrl(url, headers, GET, 3000)
+                Xhtml.from(new URL("http://vlapin.ru/"))
                         .getRootNamespaceURI().get());
-
-        // https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Reflect
-        // article[@id='wikiArticle']/(p[text()]|h2)
     }
 }

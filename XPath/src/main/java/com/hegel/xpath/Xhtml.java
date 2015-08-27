@@ -1,6 +1,5 @@
 package com.hegel.xpath;
 
-import net.sf.saxon.s9api.XdmNode;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.CompactXmlSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -10,21 +9,85 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
  * @author Vyacheslav Lapin (http://vlapin.ru)
  * @version 0.1 (8/24/2015 7:02 PM).
  */
-@FunctionalInterface
-public interface Xhtml extends Xml {
+public class Xhtml extends Xml {
 
-    HtmlCleaner HTML_CLEANER = new HtmlCleaner();
-    CleanerProperties PROPS = HTML_CLEANER.getProperties();
-    Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
+    protected Xhtml(InputStream inputStream) {
+        super(toXhtmlInputStream(inputStream));
+    }
 
-    static InputStream toXhtmlInputStream(InputStream htmlInputStream) {
+    protected Xhtml(Path path) throws FileNotFoundException {
+        this(new FileInputStream(path.toFile()));
+    }
+
+    protected Xhtml(String html, String encoding) throws UnsupportedEncodingException {
+        this(new ByteArrayInputStream(html.getBytes(encoding)));
+    }
+
+    protected Xhtml(String html) throws UnsupportedEncodingException {
+        this(html, "UTF-8");
+    }
+
+    protected Xhtml(URL url, Map<String, String> headers, Connection.Method method, int timeout) throws UnsupportedEncodingException {
+        this(HttpRequest.get(url, headers, method, timeout));
+    }
+
+    protected Xhtml(URL url) throws UnsupportedEncodingException {
+        this(HttpRequest.get(url));
+    }
+
+
+    public static Xhtml from(InputStream inputStream) {
+        return new Xhtml(inputStream);
+    }
+
+    public static Xhtml from(Path path) {
+        try {
+            return new Xhtml(path);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Xhtml from(String html, String encoding) {
+        try {
+            return new Xhtml(html, encoding);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Xhtml from(String html) {
+        return from(html, "UTF-8");
+    }
+
+    public static Xhtml from(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
+        try {
+            return new Xhtml(url, headers, method, timeout);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Xhtml from(URL url) {
+        try {
+            return new Xhtml(url);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    static private HtmlCleaner HTML_CLEANER = new HtmlCleaner();
+    static private CleanerProperties PROPS = HTML_CLEANER.getProperties();
+    static private Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
+
+    static protected InputStream toXhtmlInputStream(InputStream htmlInputStream) {
         try (InputStream inputStream = htmlInputStream) {
             return new ByteArrayInputStream(
                     // Comment DOCTYPE-section, because Saxon (and Altova XMLSpy too) can`t work with it...
@@ -34,42 +97,5 @@ public interface Xhtml extends Xml {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    static Xhtml fromInputStream(InputStream inputStream) {
-        return from(Xml.from(toXhtmlInputStream(inputStream)));
-    }
-
-    static Xhtml fromFilePath(Path path) {
-        try {
-            return from(fromInputStream(new FileInputStream(path.toFile())));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static Xhtml fromHtmlText(String html) {
-        return fromHtmlText(html, "UTF-8");
-    }
-
-    static Xhtml fromHtmlText(String html, String encoding) {
-        try {
-            return from(fromInputStream(new ByteArrayInputStream(html.getBytes(encoding))));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    static Xhtml fromUrl(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
-        return fromHtmlText(Xml.getTextFromUrl(url, headers, method, timeout));
-    }
-
-
-    static Xhtml fromUrl(URL url) {
-        return fromHtmlText(Xml.getTextFromUrl(url));
-    }
-
-    static Xhtml from(Supplier<XdmNode> xdmNodeSupplier) {
-        return xdmNodeSupplier::get;
     }
 }
