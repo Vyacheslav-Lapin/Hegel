@@ -62,12 +62,12 @@ public class HttpRequest {
         return new HttpRequest(url, headers, method, timeout).getResult();
     }
 
-    static private boolean isTrustToAllCertificatesNotCalled;
+    static private boolean isTrustToAllCertificatesNotCalled = true;
 
     static private void trustToAllCertificates() {
-        if (isTrustToAllCertificatesNotCalled)
+        if (isTrustToAllCertificatesNotCalled) // Method should execute one time for program start
             try {
-                isTrustToAllCertificatesNotCalled = true;
+                isTrustToAllCertificatesNotCalled = false;
 
                 addProvider(new Provider());
                 SSLContext sc = SSLContext.getInstance("SSL");
