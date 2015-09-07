@@ -4,17 +4,11 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 import static java.nio.file.Paths.get;
 import static java.util.stream.Collectors.joining;
 import static junit.framework.TestCase.assertEquals;
-import static org.jsoup.Connection.Method.GET;
 
-/**
- * @author Vyacheslav Lapin (http://vlapin.ru)
- * @version 0.1 (7/27/2015 11:04 PM).
- */
 public class XPathTests {
 
     static final String XML_FILE_PATH = "target/test-classes/document.xml",

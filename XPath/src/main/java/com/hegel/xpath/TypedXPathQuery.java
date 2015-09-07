@@ -7,10 +7,6 @@ import java.nio.file.Path;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-/**
- * @author Vyacheslav Lapin (http://vlapin.ru)
- * @version 0.1 (7/27/2015 10:35 PM).
- */
 public class TypedXPathQuery<T> {
 
     private Function<String, T> transformer;

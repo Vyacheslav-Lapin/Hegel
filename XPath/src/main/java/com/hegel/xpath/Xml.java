@@ -1,31 +1,13 @@
 package com.hegel.xpath;
 
-import com.sun.deploy.net.*;
-import com.sun.net.ssl.internal.ssl.Provider;
 import net.sf.saxon.s9api.XdmNode;
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Future;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import static org.jsoup.Connection.Method.GET;
 
 public class Xml {
 
@@ -56,13 +38,13 @@ public class Xml {
 
     public Xml(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
         this();
-        //TODO: Сделать через Future
+        //TODO: РЎРґРµР»Р°С‚СЊ С‡РµСЂРµР· Future
         document = xPathQueryExecutor.toDocument(HttpRequest.get(url, headers, method, timeout));
     }
 
     public Xml(URL url) {
         this();
-        //TODO: Сделать через Future
+        //TODO: РЎРґРµР»Р°С‚СЊ С‡РµСЂРµР· Future
         document = xPathQueryExecutor.toDocument(HttpRequest.get(url));
     }
 

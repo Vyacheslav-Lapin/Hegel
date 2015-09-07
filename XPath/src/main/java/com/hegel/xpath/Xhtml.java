@@ -11,10 +11,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-/**
- * @author Vyacheslav Lapin (http://vlapin.ru)
- * @version 0.1 (8/24/2015 7:02 PM).
- */
 public class Xhtml extends Xml {
 
     protected Xhtml(InputStream inputStream) {

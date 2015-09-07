@@ -1,22 +1,16 @@
 package com.hegel.xpath;
 
 import net.sf.saxon.s9api.*;
-import org.jsoup.Connection;
 
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * @author Vyacheslav Lapin (http://vlapin.ru)
- * @version 0.1 (7/27/2015 8:16 PM).
- */
+
 public class XPathQueryExecutor {
 
     protected Processor processor;

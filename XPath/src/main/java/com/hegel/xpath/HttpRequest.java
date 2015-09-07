@@ -20,10 +20,6 @@ import java.util.Map;
 import static java.security.Security.addProvider;
 import static org.jsoup.Connection.Method.GET;
 
-/**
- * @author Vyacheslav Lapin (http://vlapin.ru)
- * @version 0.1 (8/27/2015 3:21 PM).
- */
 public class HttpRequest {
 
     private URL url;
@@ -76,18 +72,9 @@ public class HttpRequest {
                 addProvider(new Provider());
                 SSLContext sc = SSLContext.getInstance("SSL");
                 sc.init(null, new TrustManager[]{new X509TrustManager() {
-                    @Override
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-
-                    @Override
-                    public void checkServerTrusted(X509Certificate[] c, String a) {
-                    }
-
-                    @Override
-                    public void checkClientTrusted(X509Certificate[] c, String a) {
-                    }
+                    @Override public X509Certificate[] getAcceptedIssuers() { return null; }
+                    @Override public void checkServerTrusted(X509Certificate[] c, String a) {}
+                    @Override public void checkClientTrusted(X509Certificate[] c, String a) {}
                 }}, new SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier((urlHostName, session) -> {
