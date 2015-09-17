@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Gegel</name>
+    <name>Hegel</name>
     <modules>
         <module>XPath</module>
     </modules>
 
-    <groupId>ru.vlapin.gegel</groupId>
-    <artifactId>gegel-core</artifactId>
+    <groupId>ru.vlapin.hegel</groupId>
+    <artifactId>hegel-core</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -32,7 +32,7 @@
     </dependencies>
 
     <build>
-        <finalName>Gegel core</finalName>
+        <finalName>Hegel core</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
