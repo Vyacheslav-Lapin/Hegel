@@ -17,6 +17,7 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.out;
 import static java.security.Security.addProvider;
 import static org.jsoup.Connection.Method.GET;
 
@@ -79,7 +80,7 @@ public class HttpRequest {
                 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier((urlHostName, session) -> {
                     if (!urlHostName.equalsIgnoreCase(session.getPeerHost()))
-                        System.out.println("Warning: URL host '" + urlHostName + "' is different to SSLSession host '"
+                        out.println("Warning: URL host '" + urlHostName + "' is different to SSLSession host '"
                                 + session.getPeerHost() + "'.");
                     return true;
                 });
