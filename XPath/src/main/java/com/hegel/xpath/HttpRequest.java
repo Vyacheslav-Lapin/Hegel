@@ -63,9 +63,9 @@ public class HttpRequest {
         return new HttpRequest(url, headers, method, timeout).getResult();
     }
 
-    static private boolean isTrustToAllCertificatesNotCalled = true;
+    private static boolean isTrustToAllCertificatesNotCalled = true;
 
-    static private void trustToAllCertificates() {
+    private static void trustToAllCertificates() {
         if (isTrustToAllCertificatesNotCalled) // Method should execute one time for program start
             try {
                 isTrustToAllCertificatesNotCalled = false;
@@ -89,9 +89,9 @@ public class HttpRequest {
             }
     }
 
-    static private Map<String, String> TYPICAL_HEADERS = new HashMap<>(5);
+    private static Map<String, String> TYPICAL_HEADERS = new HashMap<>(5);
 
-    static private Map<String, String> getTypicalHeaders(URL url) {
+    private static Map<String, String> getTypicalHeaders(URL url) {
         if (TYPICAL_HEADERS.size() == 0) {
             TYPICAL_HEADERS.put("User-Agent", "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:43.0) Gecko/20100101 Firefox/43.0");
             TYPICAL_HEADERS.put("Accept-Language", "en-US,en;q=0.5");

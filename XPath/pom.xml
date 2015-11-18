@@ -14,7 +14,7 @@
     <properties>
         <Saxon-HE.version>9.6.0-7</Saxon-HE.version>
         <jsoup.version>1.8.3</jsoup.version>
-        <htmlcleaner.version>2.14</htmlcleaner.version>
+        <htmlcleaner.version>2.15</htmlcleaner.version>
     </properties>
 
     <dependencies>
