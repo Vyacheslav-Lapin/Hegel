@@ -1,6 +1,5 @@
 package com.hegel.xpath;
 
-import com.sun.istack.internal.NotNull;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.CompactXmlSerializer;
 import org.htmlcleaner.HtmlCleaner;
@@ -80,7 +79,7 @@ public class Xhtml extends Xml {
     static private CleanerProperties PROPS = HTML_CLEANER.getProperties();
     static private Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
 
-    static protected String getCleanDocument(@NotNull InputStream htmlInputStream) {
+    static protected String getCleanDocument(InputStream htmlInputStream) {
         try (InputStream inputStream = htmlInputStream) {
             // Comment DOCTYPE-section, because Saxon (and Altova XMLSpy too) can`t work with it...
             return PATTERN.matcher(
@@ -92,7 +91,7 @@ public class Xhtml extends Xml {
         }
     }
 
-    static protected InputStream toXhtmlInputStream(@NotNull InputStream htmlInputStream) {
+    static protected InputStream toXhtmlInputStream(InputStream htmlInputStream) {
         return new ByteArrayInputStream(getCleanDocument(htmlInputStream).getBytes(UTF_8));
     }
 }

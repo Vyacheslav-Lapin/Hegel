@@ -13,10 +13,11 @@
     <groupId>ru.vlapin.hegel</groupId>
     <artifactId>hegel-core</artifactId>
     <packaging>pom</packaging>
-    <version>${hegel.version}</version>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <hegel.version>1.0-SNAPSHOT</hegel.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
         <junit.version>4.12</junit.version>
