@@ -12,9 +12,9 @@
     <artifactId>xpath</artifactId>
 
     <properties>
-        <Saxon-HE.version>9.6.0-7</Saxon-HE.version>
+        <Saxon-HE.version>9.7.0-1</Saxon-HE.version>
         <jsoup.version>1.8.3</jsoup.version>
-        <htmlcleaner.version>2.15</htmlcleaner.version>
+        <htmlcleaner.version>2.16</htmlcleaner.version>
     </properties>
 
     <dependencies>
