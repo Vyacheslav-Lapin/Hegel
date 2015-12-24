@@ -49,4 +49,21 @@ public interface PropertyMap extends Map<String, String> {
         return properties;
     }
 
+//    static <T> T get(String configFilePath, Class<T> tClass) {
+//
+//        PropertyMap props = fromFile(configFilePath);
+//        XClass<T> xClass = XClass.from(tClass);
+//
+//        try {
+//            T t = xClass.getConstructors().;
+//
+//            Stream.of(tClass.getFields())
+//                    .filter(field -> !Modifier.isStatic(field.getModifiers()))
+//                    .forEach(field -> parseSet(props.get(field.getName()), t, field));
+//
+//            return t;
+//        } catch (InstantiationException | IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }

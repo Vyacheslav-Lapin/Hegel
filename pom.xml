@@ -8,6 +8,7 @@
     <modules>
         <module>XPath</module>
         <module>Properties</module>
+        <module>Reflect</module>
     </modules>
 
     <groupId>ru.vlapin.hegel</groupId>
