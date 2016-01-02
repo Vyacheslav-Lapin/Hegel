@@ -52,7 +52,7 @@ public interface PropertyMap extends Map<String, String> {
 //    static <T> T get(String configFilePath, Class<T> tClass) {
 //
 //        PropertyMap props = fromFile(configFilePath);
-//        XClass<T> xClass = XClass.from(tClass);
+//        Class<T> xClass = Class.wrap(tClass);
 //
 //        try {
 //            T t = xClass.getConstructors().;
