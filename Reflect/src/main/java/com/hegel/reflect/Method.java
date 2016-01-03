@@ -1,8 +1,6 @@
 package com.hegel.reflect;
 
-import java.lang.reflect.Method;
-
-public class XMethod<R, C> {
+public class Method<R, C> {
 
 //    private Method method;
 //

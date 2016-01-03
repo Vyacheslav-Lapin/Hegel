@@ -1,4 +1,4 @@
 package com.hegel.reflect;
 
-public class XEnum {
+public class Annotation {
 }

@@ -15,8 +15,7 @@ public class ClassTest {
     @Test
     public void getClassFieldTest() {
         TestClass testObj = new TestClass();
-        Class<TestClass> testClass = Class.wrap(testObj);
-        Field<String, TestClass> field = testClass.<String>getField("string");
+        Field<String, TestClass> field = Class.wrap(testObj).<String>getField("string").get();
 
         assertEquals(testObj.getString(), field.toString(testObj));
     }
@@ -27,8 +26,8 @@ public class ClassTest {
         Class<TestClass> aClass = Class.wrap(obj);
 
         // private String string;
-        Field<String, TestClass> stringField = aClass.<String>getField("string");
-        assertEquals(stringField, Field.wrap("string", aClass));
+        Field<String, TestClass> stringField = aClass.<String>getField("string").get();
+        assertEquals(stringField.toSrc(), Field.wrap("string", aClass).get().toSrc());
         assertTrue(stringField.isPrivate());
         assertEquals(String.class, stringField.getType());
         assertFalse(stringField.isFinal());
@@ -38,7 +37,7 @@ public class ClassTest {
         assertNotNull(stringField.getValue(obj));
 
         // volatile int anInt = 5;
-//        Field<Integer, ClassTest> intField = aClass.getField("anInt", int.class);
+//        Field<Integer, ClassTest> intField = aClass.getField("anInt", int.class).get();
 //        assertTrue(intField.isVolatile());
 //        assertTrue(intField.isPackagePrivate());
 //        assertTrue(intField.isPrimitive());

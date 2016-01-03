@@ -1,16 +1,10 @@
 package com.hegel.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.TypeVariable;
-import java.util.stream.Stream;
-
-public class XConstructor<C> {
+public class Constructor<C> {
 
 //    private Constructor<C> constructor;
 //
-//    private XConstructor(Constructor<C> constructor) {
+//    private Constructor(Constructor<C> constructor) {
 //        this.constructor = constructor;
 //    }
 //
@@ -46,7 +40,7 @@ public class XConstructor<C> {
 //        return constructor.getAnnotatedReturnType();
 //    }
 //
-//    public static <C> XConstructor<C> wrap(Constructor<C> constructor) {
-//        return new XConstructor<>(constructor);
+//    public static <C> Constructor<C> wrap(Constructor<C> constructor) {
+//        return new Constructor<>(constructor);
 //    }
 }

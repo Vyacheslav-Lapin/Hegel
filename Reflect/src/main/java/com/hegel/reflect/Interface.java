@@ -1,4 +1,4 @@
 package com.hegel.reflect;
 
-public class XAnnotation {
+public class Interface {
 }

@@ -1,116 +1,82 @@
 package com.hegel.reflect;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.util.Optional;
 
-public class Field<F, C> //extends AccessibleObject implements Member
-{
-    private java.lang.reflect.Field field;
-    private int modifiers;
+public interface Field<F, C> {
 
-    @SuppressWarnings("unchecked")
-    protected Field(java.lang.reflect.Field field) {
-        this(field, (java.lang.Class<F>) field.getType());
+    java.lang.reflect.Field toSrc();
+
+    default int getModifiers() {
+        return toSrc().getModifiers();
     }
 
-    @SuppressWarnings("unchecked")
-    protected Field(java.lang.reflect.Field field, java.lang.Class<F> type) {
-//        assert field.getType().equals(type);
-        this(field, Class.wrap(type), Class.wrap((java.lang.Class<C>) field.getDeclaringClass()));
-    }
-
-    protected Field(java.lang.reflect.Field field, Class<F> type, Class<C> declaringClass) {
-
+    static <F, C> Field<F, C> wrap(java.lang.reflect.Field field, Class<F> type, Class<C> declaringClass) {
         assert field.getType().equals(type.toSrc());
         assert field.getDeclaringClass().equals(declaringClass.toSrc());
 
         field.setAccessible(true);
-        this.field = field;
-        modifiers = field.getModifiers();
+        return () -> field;
     }
 
-    public static <F, C> Field<F, C> wrap(java.lang.reflect.Field field, Class<F> type, Class<C> declaringClass) {
-        assert field.getType().equals(type.toSrc());
-        assert field.getDeclaringClass().equals(declaringClass.toSrc());
-
-        return new Field<>(field, type, declaringClass);
-    }
-
-    public static <F, C> Field<F, C> wrap(String name, Class<C> declaringClass) {
+    static <F, C> Optional<Field<F, C>> wrap(String name, Class<C> declaringClass) {
         return declaringClass.getField(name);
     }
 
-    public String toString(C object) {
+    default String toString(C object) {
         try {
-            return field.get(object).toString();
+            return toSrc().get(object).toString();
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        return this == o || !(o == null || getClass() != o.getClass())
-                && field.equals(((Field<?, ?>) o).field);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return field.hashCode();
-    }
-
     @SuppressWarnings("unchecked")
-    public static <F, C> Field<F, C> wrap(java.lang.reflect.Field field) {
-        return new Field<>(field,
+    static <F, C> Field<F, C> wrap(java.lang.reflect.Field field) {
+        return Field.wrap(field,
                 Class.wrap((java.lang.Class<F>) field.getType()),
                 Class.wrap((java.lang.Class<C>) field.getDeclaringClass()));
     }
 
-    public java.lang.reflect.Field getSrc() {
-        return field;
+    default boolean isStatic() {
+        return Modifier.isStatic(getModifiers());
     }
 
-    public boolean isStatic() {
-        return Modifier.isStatic(modifiers);
+    default boolean isTransient() {
+        return Modifier.isTransient(getModifiers());
     }
 
-    public boolean isTransient() {
-        return Modifier.isTransient(modifiers);
+    default boolean isFinal() {
+        return Modifier.isFinal(getModifiers());
     }
 
-    public boolean isFinal() {
-        return Modifier.isFinal(modifiers);
+    default boolean isPrimitive() {
+        return toSrc().getType().isPrimitive();
     }
 
-    public boolean isPrimitive() {
-        return field.getType().isPrimitive();
+    default boolean isPrivate() {
+        return Modifier.isPrivate(getModifiers());
     }
 
-    public boolean isPrivate() {
-        return Modifier.isPrivate(modifiers);
+    default boolean isVolatile() {
+        return Modifier.isVolatile(getModifiers());
     }
 
-    public boolean isVolatile() {
-        return Modifier.isVolatile(modifiers);
+    default boolean isPackagePrivate() {
+        return !Modifier.isPrivate(getModifiers())
+                && !Modifier.isProtected(getModifiers())
+                && !Modifier.isPublic(getModifiers());
     }
 
-    public boolean isPackagePrivate() {
-        return !Modifier.isPrivate(modifiers)
-                && !Modifier.isProtected(modifiers)
-                && !Modifier.isPublic(modifiers);
-    }
-
-    public boolean isPublic() {
-        return Modifier.isPublic(modifiers);
+    default boolean isPublic() {
+        return Modifier.isPublic(getModifiers());
     }
 
     @SuppressWarnings("unchecked")
-    public F getValue(C object) {
+    default F getValue(C object) {
         Object o;
         try {
-            o = field.get(object);
+            o = toSrc().get(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -118,8 +84,8 @@ public class Field<F, C> //extends AccessibleObject implements Member
     }
 
     @SuppressWarnings("unchecked")
-    public java.lang.Class<F> getType() {
-        return (java.lang.Class<F>) field.getType();
+    default java.lang.Class<F> getType() {
+        return (java.lang.Class<F>) toSrc().getType();
     }
 
 //    static <T> void parseSet(String value, T t, java.lang.reflect.Field field) {
