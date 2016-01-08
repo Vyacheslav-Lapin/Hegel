@@ -19,7 +19,7 @@ public interface Class<C> {
         return () -> ((java.lang.Class<C>) obj.getClass());
     }
 
-    default Optional<Field<C>> getField(String name) {
+    default <F extends Field<C>> Optional<F> getField(String name) {
         try {
             return Optional.of(Field.wrap(toSrc().getDeclaredField(name)));
         } catch (NoSuchFieldException e) {
@@ -31,7 +31,7 @@ public interface Class<C> {
         return Stream.of(toSrc().getDeclaredFields()).map(Field::wrap);
     }
 
-    default Stream<Field<C>> dinamicFields() {
+    default Stream<Field<C>> dynamicFields() {
         return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
@@ -44,7 +44,7 @@ public interface Class<C> {
     }
 
     default String sqlSelectQuery() {
-        return "select " + dinamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
+        return "select " + dynamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
     }
 //
 //    public Stream<XMethod<?, C>> getMethods() {

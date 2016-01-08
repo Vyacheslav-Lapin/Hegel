@@ -12,7 +12,7 @@ public interface Field<C> {
         return toSrc().getModifiers();
     }
 
-    static <F, C> Field<C> wrap(java.lang.reflect.Field field) {
+    static <C> Field<C> wrap(java.lang.reflect.Field field) {
         java.lang.Class<?> type = field.getType();
         return type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
                 type == long.class ? LongField.wrap(field) :

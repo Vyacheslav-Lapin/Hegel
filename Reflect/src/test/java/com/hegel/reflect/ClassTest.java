@@ -60,7 +60,7 @@ public class ClassTest {
     @Test
     public void calculateDbFields() {
         Class<TestClass> aClass = Class.wrap(TestClass.class);
-        aClass.dinamicFields()
+        aClass.dynamicFields()
                 .map(Field::toSqlName)
                 .peek(System.out::println)
                 .map(Field::fromSqlName)
