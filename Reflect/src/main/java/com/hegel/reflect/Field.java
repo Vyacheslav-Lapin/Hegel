@@ -3,7 +3,8 @@ package com.hegel.reflect;
 import java.lang.reflect.Modifier;
 import java.util.Optional;
 
-public interface Field<F, C> {
+@FunctionalInterface
+public interface Field<C> {
 
     java.lang.reflect.Field toSrc();
 
@@ -11,15 +12,15 @@ public interface Field<F, C> {
         return toSrc().getModifiers();
     }
 
-    static <F, C> Field<F, C> wrap(java.lang.reflect.Field field, Class<F> type, Class<C> declaringClass) {
-        assert field.getType().equals(type.toSrc());
-        assert field.getDeclaringClass().equals(declaringClass.toSrc());
-
-        field.setAccessible(true);
-        return () -> field;
+    static <F, C> Field<C> wrap(java.lang.reflect.Field field) {
+        java.lang.Class<?> type = field.getType();
+        return type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
+                type == long.class ? LongField.wrap(field) :
+                        type == double.class || type == float.class ? DoubleField.wrap(field) :
+                                ObjectField.wrap(field);
     }
 
-    static <F, C> Optional<Field<F, C>> wrap(String name, Class<C> declaringClass) {
+    static <C> Optional<Field<C>> wrap(String name, Class<C> declaringClass) {
         return declaringClass.getField(name);
     }
 
@@ -29,13 +30,6 @@ public interface Field<F, C> {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    static <F, C> Field<F, C> wrap(java.lang.reflect.Field field) {
-        return Field.wrap(field,
-                Class.wrap((java.lang.Class<F>) field.getType()),
-                Class.wrap((java.lang.Class<C>) field.getDeclaringClass()));
     }
 
     default boolean isStatic() {
@@ -72,20 +66,28 @@ public interface Field<F, C> {
         return Modifier.isPublic(getModifiers());
     }
 
-    @SuppressWarnings("unchecked")
-    default F getValue(C object) {
-        Object o;
-        try {
-            o = toSrc().get(object);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        return (F) o;
+    default String toSqlName() {
+        StringBuilder result = new StringBuilder();
+        for (char character : toSrc().getName().toCharArray())
+            if (Character.isUpperCase(character))
+                result.append('_').append(Character.toLowerCase(character));
+            else
+                result.append(character);
+        return result.toString();
     }
 
-    @SuppressWarnings("unchecked")
-    default java.lang.Class<F> getType() {
-        return (java.lang.Class<F>) toSrc().getType();
+    static String fromSqlName(String sqlName) {
+        StringBuilder result = new StringBuilder();
+        char character;
+        char[] chars = sqlName.toCharArray();
+        for (int i = 0; i < chars.length;) {
+            character = chars[i++];
+            if (character == '_') {
+                result.append(Character.toUpperCase(chars[i++]));
+            } else
+                result.append(character);
+        }
+        return result.toString();
     }
 
 //    static <T> void parseSet(String value, T t, java.lang.reflect.Field field) {

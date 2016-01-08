@@ -12,6 +12,7 @@ public class TestClass {
     private String string = "мама мыла раму";
     volatile int anInt = 5;
     public static final double PI = Math.PI;
+    public static Integer counter;
 
     public String getString() {
         return string;

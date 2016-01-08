@@ -2,8 +2,10 @@ package com.hegel.reflect;
 
 import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@FunctionalInterface
 public interface Class<C> {
 
     java.lang.Class<C> toSrc();
@@ -17,7 +19,7 @@ public interface Class<C> {
         return () -> ((java.lang.Class<C>) obj.getClass());
     }
 
-    default <F> Optional<Field<F, C>> getField(String name) {
+    default Optional<Field<C>> getField(String name) {
         try {
             return Optional.of(Field.wrap(toSrc().getDeclaredField(name)));
         } catch (NoSuchFieldException e) {
@@ -25,20 +27,24 @@ public interface Class<C> {
         }
     }
 
-    default Stream<Field<?, C>> fields() {
-        return Stream.of(toSrc().getFields()).map(Field::wrap);
+    default Stream<Field<C>> fields() {
+        return Stream.of(toSrc().getDeclaredFields()).map(Field::wrap);
     }
 
-    default Stream<Field<?, C>> getDinamicFields() {
-        return Stream.of(toSrc().getFields())
+    default Stream<Field<C>> dinamicFields() {
+        return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
     }
 
-    default Stream<Field<?, C>> getStaticFields() {
-        return Stream.of(toSrc().getFields())
+    default Stream<Field<C>> staticFields() {
+        return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
+    }
+
+    default String sqlSelectQuery() {
+        return "select " + dinamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
     }
 //
 //    public Stream<XMethod<?, C>> getMethods() {
