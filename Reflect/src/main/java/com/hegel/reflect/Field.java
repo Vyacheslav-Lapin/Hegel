@@ -12,12 +12,13 @@ public interface Field<C> {
         return toSrc().getModifiers();
     }
 
-    static <C> Field<C> wrap(java.lang.reflect.Field field) {
+    @SuppressWarnings("unchecked")
+    static <C, F extends Field<C>> F wrap(java.lang.reflect.Field field) {
         java.lang.Class<?> type = field.getType();
-        return type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
+        return (F) (type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
                 type == long.class ? LongField.wrap(field) :
                         type == double.class || type == float.class ? DoubleField.wrap(field) :
-                                ObjectField.wrap(field);
+                                ObjectField.wrap(field));
     }
 
     static <C> Optional<Field<C>> wrap(String name, Class<C> declaringClass) {

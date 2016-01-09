@@ -15,7 +15,7 @@ public class ClassTest {
     @Test
     public void getClassFieldTest() {
         TestClass testObj = new TestClass();
-        ObjectField<String, TestClass> field = (ObjectField<String, TestClass>) Class.wrap(testObj).<String>getField("string").get();
+        ObjectField<String, TestClass> field = (ObjectField<String, TestClass>) Class.wrap(testObj).getField("string").get();
 
         assertEquals(testObj.getString(), field.toString(testObj));
     }
@@ -26,7 +26,7 @@ public class ClassTest {
         Class<TestClass> aClass = Class.wrap(obj);
 
         // private String string;
-        ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.<String>getField("string").get();
+        ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.getField("string").get();
         assertEquals(stringField.toSrc(), Field.wrap("string", aClass).get().toSrc());
         assertTrue(stringField.isPrivate());
         assertEquals(String.class, stringField.toSrc().getType());

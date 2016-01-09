@@ -19,6 +19,7 @@ public interface Class<C> {
         return () -> ((java.lang.Class<C>) obj.getClass());
     }
 
+    @SuppressWarnings("unchecked")
     default <F extends Field<C>> Optional<F> getField(String name) {
         try {
             return Optional.of(Field.wrap(toSrc().getDeclaredField(name)));
