@@ -1,4 +1,4 @@
-package com.hegel.reflect;
+package com.hegel.reflect.fields;
 
 @FunctionalInterface
 public interface LongField<C> extends Field<C> {

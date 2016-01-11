@@ -1,5 +1,9 @@
 package com.hegel.reflect;
 
+import com.hegel.reflect.fields.DoubleField;
+import com.hegel.reflect.fields.Field;
+import com.hegel.reflect.fields.IntField;
+import com.hegel.reflect.fields.ObjectField;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -55,20 +59,5 @@ public class ClassTest {
         assertEquals(double.class, piXField.toSrc().getType());
         assertNotEquals(Double.class, piXField.toSrc().getType());
         assertTrue(Math.PI == piXField.getValue());
-    }
-
-    @Test
-    public void calculateDbFields() {
-        Class<TestClass> aClass = Class.wrap(TestClass.class);
-        aClass.dinamicFields()
-                .map(Field::toSqlName)
-                .peek(System.out::println)
-                .map(Field::fromSqlName)
-                .forEach(System.out::println);
-    }
-
-    @Test
-    public void calculateDbQuery() {
-        assertEquals("select id, name, login, password, is_txt_enable from User", Class.wrap(User.class).sqlSelectQuery());
     }
 }

@@ -1,4 +1,4 @@
-package com.hegel.reflect;
+package com.hegel.reflect.fields;
 
 @FunctionalInterface
 public interface ObjectField<F, C> extends Field<C> {
@@ -21,10 +21,4 @@ public interface ObjectField<F, C> extends Field<C> {
         assert isStatic();
         return getValue(null);
     }
-
-    @SuppressWarnings("unchecked")
-    default java.lang.Class<F> getType() {
-        return (java.lang.Class<F>) toSrc().getType();
-    }
-
 }

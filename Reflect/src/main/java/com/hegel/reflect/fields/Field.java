@@ -1,18 +1,24 @@
-package com.hegel.reflect;
+package com.hegel.reflect.fields;
+
+import com.hegel.reflect.BaseType;
+import com.hegel.reflect.Class;
 
 import java.lang.reflect.Modifier;
 import java.util.Optional;
 
-@FunctionalInterface
 public interface Field<C> {
 
     java.lang.reflect.Field toSrc();
+
+    default BaseType getType() {
+        return BaseType.from(toSrc().getType());
+    }
 
     default int getModifiers() {
         return toSrc().getModifiers();
     }
 
-    static <F, C> Field<C> wrap(java.lang.reflect.Field field) {
+    static <C> Field<C> wrap(java.lang.reflect.Field field) {
         java.lang.Class<?> type = field.getType();
         return type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
                 type == long.class ? LongField.wrap(field) :
@@ -64,30 +70,6 @@ public interface Field<C> {
 
     default boolean isPublic() {
         return Modifier.isPublic(getModifiers());
-    }
-
-    default String toSqlName() {
-        StringBuilder result = new StringBuilder();
-        for (char character : toSrc().getName().toCharArray())
-            if (Character.isUpperCase(character))
-                result.append('_').append(Character.toLowerCase(character));
-            else
-                result.append(character);
-        return result.toString();
-    }
-
-    static String fromSqlName(String sqlName) {
-        StringBuilder result = new StringBuilder();
-        char character;
-        char[] chars = sqlName.toCharArray();
-        for (int i = 0; i < chars.length;) {
-            character = chars[i++];
-            if (character == '_') {
-                result.append(Character.toUpperCase(chars[i++]));
-            } else
-                result.append(character);
-        }
-        return result.toString();
     }
 
 //    static <T> void parseSet(String value, T t, java.lang.reflect.Field field) {

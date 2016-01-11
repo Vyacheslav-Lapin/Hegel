@@ -1,8 +1,9 @@
 package com.hegel.reflect;
 
+import com.hegel.reflect.fields.Field;
+
 import java.lang.reflect.Modifier;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -43,9 +44,22 @@ public interface Class<C> {
                 .map(Field::wrap);
     }
 
-    default String sqlSelectQuery() {
-        return "select " + dinamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
+    default boolean isInherited(java.lang.Class<?> aClass) {
+        return isInherited(toSrc(), aClass);
     }
+
+    static boolean isInherited(java.lang.Class<?> theClass, java.lang.Class<?> aClass) {
+
+        while (theClass != null)
+            if (theClass == aClass)
+                return true;
+            else
+                theClass = theClass.getSuperclass();
+
+        return false;
+    }
+
+
 //
 //    public Stream<XMethod<?, C>> getMethods() {
 //        return Stream.of(theClass.getMethods())

@@ -1,6 +1,4 @@
-package com.hegel.reflect;
-
-import java.lang.*;
+package com.hegel.reflect.fields;
 
 @FunctionalInterface
 public interface IntField<C> extends Field<C> {

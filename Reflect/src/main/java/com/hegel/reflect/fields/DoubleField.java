@@ -1,4 +1,4 @@
-package com.hegel.reflect;
+package com.hegel.reflect.fields;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,14 +28,5 @@ public interface DoubleField<C> extends Field<C> {
     @Override
     default String toString(C object) {
         return Double.toString(getValue(object));
-    }
-
-    default DoubleField<C> from(C object, ResultSet resultSet) {
-        try {
-            toSrc().set(object, resultSet.getDouble(toSqlName()));
-        } catch (IllegalAccessException | SQLException e) {
-            e.printStackTrace();
-        }
-        return this;
     }
 }
