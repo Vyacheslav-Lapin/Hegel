@@ -19,7 +19,7 @@ public class ClassTest {
     @Test
     public void getClassFieldTest() {
         TestClass testObj = new TestClass();
-        ObjectField<String, TestClass> field = (ObjectField<String, TestClass>) Class.wrap(testObj).<String>getField("string").get();
+        ObjectField<String, TestClass> field = (ObjectField<String, TestClass>) Class.wrap(testObj).getField("string").get();
 
         assertEquals(testObj.getString(), field.toString(testObj));
     }
@@ -30,7 +30,7 @@ public class ClassTest {
         Class<TestClass> aClass = Class.wrap(obj);
 
         // private String string;
-        ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.<String>getField("string").get();
+        ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.getField("string").get();
         assertEquals(stringField.toSrc(), Field.wrap("string", aClass).get().toSrc());
         assertTrue(stringField.isPrivate());
         assertEquals(String.class, stringField.toSrc().getType());
@@ -59,5 +59,20 @@ public class ClassTest {
         assertEquals(double.class, piXField.toSrc().getType());
         assertNotEquals(Double.class, piXField.toSrc().getType());
         assertTrue(Math.PI == piXField.getValue());
+    }
+
+    @Test
+    public void calculateDbFields() {
+        Class<TestClass> aClass = Class.wrap(TestClass.class);
+        aClass.dynamicFields()
+                .map(Field::toSqlName)
+                .peek(System.out::println)
+                .map(Field::fromSqlName)
+                .forEach(System.out::println);
+    }
+
+    @Test
+    public void calculateDbQuery() {
+        assertEquals("select id, name, login, password, is_txt_enable from User", Class.wrap(User.class).sqlSelectQuery());
     }
 }

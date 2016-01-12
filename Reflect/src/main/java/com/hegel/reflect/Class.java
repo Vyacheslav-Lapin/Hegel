@@ -4,6 +4,7 @@ import com.hegel.reflect.fields.Field;
 
 import java.lang.reflect.Modifier;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -20,7 +21,8 @@ public interface Class<C> {
         return () -> ((java.lang.Class<C>) obj.getClass());
     }
 
-    default Optional<Field<C>> getField(String name) {
+    @SuppressWarnings("unchecked")
+    default <F extends Field<C>> Optional<F> getField(String name) {
         try {
             return Optional.of(Field.wrap(toSrc().getDeclaredField(name)));
         } catch (NoSuchFieldException e) {
@@ -44,6 +46,8 @@ public interface Class<C> {
                 .map(Field::wrap);
     }
 
+    default String sqlSelectQuery() {
+        return "select " + dynamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
     default boolean isInherited(java.lang.Class<?> aClass) {
         return isInherited(toSrc(), aClass);
     }
