@@ -4,21 +4,28 @@ import com.hegel.reflect.fields.DoubleField;
 import com.hegel.reflect.fields.Field;
 import com.hegel.reflect.fields.IntField;
 import com.hegel.reflect.fields.ObjectField;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ClassTest {
 
+    TestClass testObj;
+
+    @Before
+    public void init() {
+        testObj = new TestClass();
+    }
+
     @Test
-    public void getClassTest() {
-        assertEquals(getClass(), Class.wrap(this.getClass()).toSrc());
+    public void toSrcTest() {
+        assertEquals(getClass(), Class.wrap(getClass()).toSrc());
         assertEquals(TestClass.class, Class.wrap(TestClass.class).toSrc());
     }
 
     @Test
     public void getClassFieldTest() {
-        TestClass testObj = new TestClass();
         ObjectField<String, TestClass> field = (ObjectField<String, TestClass>) Class.wrap(testObj).getField("string").get();
 
         assertEquals(testObj.getString(), field.toString(testObj));
@@ -26,8 +33,7 @@ public class ClassTest {
 
     @Test
     public void getFieldsTest() {
-        TestClass obj = new TestClass();
-        Class<TestClass> aClass = Class.wrap(obj);
+        Class<TestClass> aClass = Class.wrap(testObj);
 
         // private String string;
         ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.getField("string").get();
@@ -38,7 +44,7 @@ public class ClassTest {
         assertFalse(stringField.isStatic());
         assertFalse(stringField.isTransient());
         assertFalse(stringField.isVolatile());
-        assertNotNull(stringField.getValue(obj));
+        assertNotNull(stringField.getValue(testObj));
 
         // volatile int anInt = 5;
         IntField<TestClass> intField = (IntField<TestClass>) aClass.getField("anInt").get();
@@ -47,7 +53,7 @@ public class ClassTest {
         assertTrue(intField.isPrimitive());
         assertEquals(int.class, intField.toSrc().getType());
         assertNotEquals(Integer.class, intField.toSrc().getType());
-        assertTrue(5 == intField.getValue(obj));
+        assertTrue(5 == intField.getValue(testObj));
 
 //        // public static double PI = Math.PI;
         DoubleField<TestClass> piXField = (DoubleField<TestClass>) aClass.getField("PI").get();
