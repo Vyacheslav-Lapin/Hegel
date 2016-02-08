@@ -66,19 +66,4 @@ public class ClassTest {
         assertNotEquals(Double.class, piXField.toSrc().getType());
         assertTrue(Math.PI == piXField.getValue());
     }
-
-    @Test
-    public void calculateDbFields() {
-        Class<TestClass> aClass = Class.wrap(TestClass.class);
-        aClass.dynamicFields()
-                .map(Field::toSqlName)
-                .peek(System.out::println)
-                .map(Field::fromSqlName)
-                .forEach(System.out::println);
-    }
-
-    @Test
-    public void calculateDbQuery() {
-        assertEquals("select id, name, login, password, is_txt_enable from User", Class.wrap(User.class).sqlSelectQuery());
-    }
 }

@@ -1,10 +1,10 @@
 package com.hegel.reflect;
 
 import com.hegel.reflect.fields.Field;
+import com.hegel.reflect.methods.Method;
 
 import java.lang.reflect.Modifier;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -34,7 +34,7 @@ public interface Class<C> {
         return Stream.of(toSrc().getDeclaredFields()).map(Field::wrap);
     }
 
-    default Stream<Field<C>> dinamicFields() {
+    default Stream<Field<C>> dynamicFields() {
         return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
@@ -46,10 +46,12 @@ public interface Class<C> {
                 .map(Field::wrap);
     }
 
-    default String sqlSelectQuery() {
-        return "select " + dynamicFields().map(Field::toSqlName).collect(Collectors.joining(", ")) + " from " + toSrc().getSimpleName();
     default boolean isInherited(java.lang.Class<?> aClass) {
         return isInherited(toSrc(), aClass);
+    }
+
+    default boolean isInherited(Class<?> aClass) {
+        return isInherited(toSrc(), aClass.toSrc());
     }
 
     static boolean isInherited(java.lang.Class<?> theClass, java.lang.Class<?> aClass) {
@@ -63,17 +65,27 @@ public interface Class<C> {
         return false;
     }
 
+    default Stream<Method<C>> methods() {
+        return Stream.of(toSrc().getMethods()).map(Method::wrap);
+    }
 
-//
-//    public Stream<XMethod<?, C>> getMethods() {
-//        return Stream.of(theClass.getMethods())
-//                .map(this::getMethod);
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    private <R> XMethod<R, C> getMethod(Method method) {
-//        return XMethod.wrap(method, (java.lang.Class<R>) method.getReturnType(), theClass);
-//    }
+    default Stream<Method<C>> dynamicMethods() {
+        return Stream.of(toSrc().getMethods())
+                .filter(method -> !Modifier.isStatic(method.getModifiers()))
+                .map(Method::wrap);
+    }
+
+    default Stream<Method<C>> staticMethods() {
+        return Stream.of(toSrc().getMethods())
+                .filter(method -> Modifier.isStatic(method.getModifiers()))
+                .map(Method::wrap);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <M extends Method<C>> Optional<M> getMethod(String name, Class<?>... params) {
+//        return toSrc().getMethod(name, params); // TODO: Разобраться, как правильно вызвать, возможное решение тут: http://stackoverflow.com/questions/9262577/most-readable-way-to-add-elements-to-java-vararg-call
+        return null;
+    }
 //
 //    @SuppressWarnings("unchecked")
 //    public Stream<Constructor<C>> getConstructors() {

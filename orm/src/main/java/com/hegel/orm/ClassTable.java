@@ -52,6 +52,6 @@ public interface ClassTable<C> extends Class<C> {
     }
 
     default Stream<FieldColumn<C>> columns() {
-        return dinamicFields().map(FieldColumn::wrap);
+        return dynamicFields().map(FieldColumn::wrap);
     }
 }

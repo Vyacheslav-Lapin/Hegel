@@ -31,7 +31,7 @@ public interface PropertyMap extends Map<String, String> {
         try {
             return PropertyMap.from(
                     Files.lines(path).parallel()
-                            .map(s -> s.split("="))
+                            .map((String s) -> s.split("="))
                             .collect(Collectors.toMap(strings -> strings[0], strings -> strings[1]))
             );
         } catch (IOException e) {
@@ -47,6 +47,10 @@ public interface PropertyMap extends Map<String, String> {
         Properties properties = new Properties();
         properties.putAll(this);
         return properties;
+    }
+
+    static <T> T get(String configFilePath, Class<T> aClass) {
+        return null;
     }
 
 //    static <T> T get(String configFilePath, Class<T> tClass) {

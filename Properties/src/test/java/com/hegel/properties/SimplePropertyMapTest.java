@@ -42,13 +42,13 @@ public class SimplePropertyMapTest {
         System.out.println(propertyMap);
     }
 
-//    @Test
-//    public void getBean() {
-//        SimpleTestPojo simpleTestPojo = PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class);
-//
-//        PropertyMap props = PropertyMap.fromFile(CONFIG_FILE_PATH);
-//        SimpleTestPojo expected = new SimpleTestPojo(props.get("param2"), Integer.parseInt(props.get("intParam")));
-//
-//        assertEquals(expected, simpleTestPojo);
-//    }
+    @Test
+    public void getBean() {
+        SimpleTestPojo simpleTestPojo = PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class);
+
+        PropertyMap props = PropertyMap.fromFile(CONFIG_FILE_PATH);
+        SimpleTestPojo expected = new SimpleTestPojo(props.get("param2"), Integer.parseInt(props.get("intParam")));
+
+        assertEquals(expected, simpleTestPojo);
+    }
 }

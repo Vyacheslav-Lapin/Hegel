@@ -547,11 +547,11 @@
 
     <xsd:simpleType name="fkCascadeActionOptions">
         <xsd:restriction base="xsd:token">
-            <xsd:enumeration value="CASCADE"></xsd:enumeration>
-            <xsd:enumeration value="SET NULL"></xsd:enumeration>
-            <xsd:enumeration value="SET DEFAULT"></xsd:enumeration>
-            <xsd:enumeration value="RESTRICT"></xsd:enumeration>
-            <xsd:enumeration value="NO ACTION"></xsd:enumeration>
+            <xsd:enumeration value="CASCADE"/>
+            <xsd:enumeration value="SET NULL"/>
+            <xsd:enumeration value="SET DEFAULT"/>
+            <xsd:enumeration value="RESTRICT"/>
+            <xsd:enumeration value="NO ACTION"/>
         </xsd:restriction>
     </xsd:simpleType>
 

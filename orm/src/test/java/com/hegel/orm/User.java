@@ -2,6 +2,7 @@ package com.hegel.orm;
 
 import com.hegel.orm.annotations.AutoIncrement;
 import com.hegel.orm.annotations.Id;
+import com.hegel.orm.annotations.Size;
 
 /**
  * CREATE TABLE User (
@@ -14,16 +15,19 @@ import com.hegel.orm.annotations.Id;
  *   PRIMARY KEY (id)
  * )
  */
-public class User {
+class User {
 
     @Id
     @AutoIncrement
     private int id;
 
+    @Size(60)
     private String name;
 
+    @Size(20)
     private String login;
 
+    @Size(20)
     private String password;
 
     private boolean isTxtEnable;
