@@ -6,9 +6,9 @@
 
     <name>Hegel</name>
     <modules>
-        <module>XPath</module>
-        <module>Properties</module>
-        <module>Reflect</module>
+        <module>xpath</module>
+        <module>properties</module>
+        <module>reflect</module>
         <module>orm</module>
     </modules>
 
