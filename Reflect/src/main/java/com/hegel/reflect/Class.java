@@ -3,8 +3,13 @@ package com.hegel.reflect;
 import com.hegel.reflect.fields.Field;
 import com.hegel.reflect.methods.Method;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -83,9 +88,18 @@ public interface Class<C> {
 
     @SuppressWarnings("unchecked")
     default <M extends Method<C>> Optional<M> getMethod(String name, Class<?>... params) {
-//        return toSrc().getMethod(name, params); // TODO: Разобраться, как правильно вызвать, возможное решение тут: http://stackoverflow.com/questions/9262577/most-readable-way-to-add-elements-to-java-vararg-call
-        return null;
+        java.lang.Class<C>[] paramsArray = Arrays.stream(params).map(Class::toSrc).toArray(java.lang.Class[]::new);
+        return getMethod(name, paramsArray);
     }
+
+    default <M extends Method<C>> Optional<M> getMethod(String name, java.lang.Class<?>... params) {
+        try {
+            return Optional.of(Method.wrap(toSrc().getMethod(name, params)));
+        } catch (NoSuchMethodException e) {
+            return Optional.empty();
+        }
+    }
+
 //
 //    @SuppressWarnings("unchecked")
 //    public Stream<Constructor<C>> getConstructors() {
