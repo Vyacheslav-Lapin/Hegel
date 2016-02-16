@@ -1,7 +1,6 @@
 package com.hegel.reflect;
 
 import java.lang.Class;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.hegel.reflect.Class.isInherited;
@@ -23,18 +22,13 @@ public enum BaseType {
         this.aClass = aClass;
     }
 
-    public Class<?> getAClass() {
+    public Class<?> getType() {
         return aClass;
     }
 
     public static BaseType from(Class<?> type) {
-
-        Optional<BaseType> baseTypeOptional = Stream.of(BaseType.values())
-                .filter(baseType -> isInherited(type, baseType.getAClass()))
-                .findAny();
-
-        assert baseTypeOptional.isPresent();
-
-        return baseTypeOptional.get();
+        return Stream.of(BaseType.values())
+                .filter(baseType -> isInherited(type, baseType.getType()))
+                .findAny().get();
     }
 }

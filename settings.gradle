@@ -1,0 +1,3 @@
+rootProject.name = 'Hegel'
+
+include 'xpath', 'reflect', 'properties', 'orm'

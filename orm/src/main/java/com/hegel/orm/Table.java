@@ -9,10 +9,10 @@ import java.io.Writer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface ClassTable<C> extends Class<C> {
+public interface Table<C> extends Class<C> {
 
     default String selectQuery() {
-        return "SELECT " + columns().map(FieldColumn::toSqlName).collect(Collectors.joining(", ")) + " FROM " + toSrc().getSimpleName();
+        return "SELECT " + columns().map(Column::toSqlName).collect(Collectors.joining(", ")) + " FROM " + toSrc().getSimpleName();
     }
 
     default void toLiquibaseXML(Writer writer) {
@@ -39,19 +39,20 @@ public interface ClassTable<C> extends Class<C> {
     }
 
     default String sqlCreateQuery() {
-        return "";
+        return "CREATE TABLE " + toSrc().getSimpleName() + " (" +
+                columns().map(column -> column.toCreateQuery());
     }
 
-    static <C> ClassTable<C> wrap(java.lang.Class<C> aClass) {
+    static <C> Table<C> wrap(java.lang.Class<C> aClass) {
         return () -> aClass;
     }
 
     @SuppressWarnings("unchecked")
-    static <C> ClassTable<C> wrap(C aClass) {
+    static <C> Table<C> wrap(C aClass) {
         return wrap((java.lang.Class<C>) aClass.getClass());
     }
 
-    default Stream<FieldColumn<C>> columns() {
-        return dynamicFields().map(FieldColumn::wrap);
+    default Stream<Column<C>> columns() {
+        return dynamicFields().map(Column::wrap);
     }
 }

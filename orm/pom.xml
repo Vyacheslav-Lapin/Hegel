@@ -12,7 +12,7 @@
     <artifactId>orm</artifactId>
 
     <properties>
-        <h2.version>1.4.190</h2.version>
+        <h2.version>1.4.191</h2.version>
         <reflect.version>1.0-SNAPSHOT</reflect.version>
     </properties>
 

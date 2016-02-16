@@ -4,6 +4,7 @@ import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
 
 import java.lang.reflect.Modifier;
+import java.sql.JDBCType;
 import java.util.Optional;
 
 @FunctionalInterface

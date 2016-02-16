@@ -3,13 +3,9 @@ package com.hegel.reflect;
 import com.hegel.reflect.fields.Field;
 import com.hegel.reflect.methods.Method;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -70,17 +66,17 @@ public interface Class<C> {
         return false;
     }
 
-    default Stream<Method<C>> methods() {
+    default <M extends Method<C>> Stream<M> methods() {
         return Stream.of(toSrc().getMethods()).map(Method::wrap);
     }
 
-    default Stream<Method<C>> dynamicMethods() {
+    default <M extends Method<C>> Stream<M> dynamicMethods() {
         return Stream.of(toSrc().getMethods())
                 .filter(method -> !Modifier.isStatic(method.getModifiers()))
                 .map(Method::wrap);
     }
 
-    default Stream<Method<C>> staticMethods() {
+    default <M extends Method<C>> Stream<M> staticMethods() {
         return Stream.of(toSrc().getMethods())
                 .filter(method -> Modifier.isStatic(method.getModifiers()))
                 .map(Method::wrap);
@@ -100,9 +96,8 @@ public interface Class<C> {
         }
     }
 
-//
 //    @SuppressWarnings("unchecked")
-//    public Stream<Constructor<C>> getConstructors() {
+//    default Stream<Constructor<C>> getConstructors() {
 //        return Stream.of((Constructor<C>[]) theClass.getConstructors())
 //                .map(Constructor::wrap);
 //    }

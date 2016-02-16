@@ -7,10 +7,10 @@ import javax.xml.stream.XMLStreamWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface FieldColumn<C> extends Field<C> {
+public interface Column<C> extends Field<C> {
 
     @SuppressWarnings("Convert2MethodRef")
-    static <C> FieldColumn<C> wrap(Field<C> cField) {
+    static <C> Column<C> wrap(Field<C> cField) {
         return () -> cField.toSrc();
     }
 
@@ -70,12 +70,16 @@ public interface FieldColumn<C> extends Field<C> {
         }
     }
 
-    default FieldColumn<C> read(C object, ResultSet resultSet) {
+    default Column<C> read(C object, ResultSet resultSet) {
         try {
             toSrc().set(object, resultSet.getDouble(toSqlName()));
         } catch (IllegalAccessException | SQLException e) {
             e.printStackTrace();
         }
         return this;
+    }
+
+    default String toCreateQuery() {
+        return toSqlName() + " " + SqlType.toString(this);
     }
 }

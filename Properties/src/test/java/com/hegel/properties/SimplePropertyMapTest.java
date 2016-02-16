@@ -1,5 +1,6 @@
 package com.hegel.properties;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -42,6 +43,7 @@ public class SimplePropertyMapTest {
         System.out.println(propertyMap);
     }
 
+    @Ignore
     @Test
     public void getBean() {
         SimpleTestPojo simpleTestPojo = PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class);

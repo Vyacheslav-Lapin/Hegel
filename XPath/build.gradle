@@ -1,0 +1,5 @@
+dependencies {
+    compile "net.sf.saxon:Saxon-HE:9.7.0-2"
+    compile "org.jsoup:jsoup:1.8.3"
+    compile "net.sourceforge.htmlcleaner:htmlcleaner:2.16"
+}
