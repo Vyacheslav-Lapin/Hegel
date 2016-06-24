@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:tns="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+            elementFormDefault="qualified"
+            xmlns="http://www.w3.org/2001/XMLSchema">
 
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-            xmlns="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-            elementFormDefault="qualified">
-</xsd:schema>
+</schema>

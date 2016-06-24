@@ -7,11 +7,10 @@ import javax.xml.stream.XMLStreamWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface Column<C> extends Field<C> {
+public interface Column<T, C> extends Field<T, C> {
 
-    @SuppressWarnings("Convert2MethodRef")
-    static <C> Column<C> wrap(Field<C> cField) {
-        return () -> cField.toSrc();
+    static <T, C> Column<T, C> wrap(Field<T, C> cField) {
+        return cField::toSrc;
     }
 
     default String toSqlName() {
@@ -26,15 +25,10 @@ public interface Column<C> extends Field<C> {
 
     static String fromSqlName(String sqlName) {
         StringBuilder result = new StringBuilder();
-        char character;
-        char[] chars = sqlName.toCharArray();
-        for (int i = 0; i < chars.length; ) {
-            character = chars[i++];
-            if (character == '_') {
-                result.append(Character.toUpperCase(chars[i++]));
-            } else
-                result.append(character);
-        }
+        char character,
+                chars[] = sqlName.toCharArray();
+        for (int i = 0; i < chars.length; )
+            result.append((character = chars[i++]) == '_' ? Character.toUpperCase(chars[i++]) : character);
         return result.toString();
     }
 
@@ -51,26 +45,27 @@ public interface Column<C> extends Field<C> {
     }
 
     default String sqlType() {
-        switch (getType()) {
-            case BOOLEAN:
-                return "boolean";
-            case BYTE:
-            case SHORT:
-            case CHAR:
-            case INT:
-                return "int";
-            case LONG:
-                return "long";
-            case FLOAT:
-            case DOUBLE:
-                return "float";
-            case OBJECT: //todo: String?
-            default:
-                return "object"; //todo: как-то передать что тут будет ссылка с ключём на другую таблицу
-        }
+        return SqlType.from(getOwnerClass()).toString();
+//        switch (SqlType.from(getPrimitiveClass())) {
+//            case BOOLEAN:
+//                return "boolean";
+//            case BYTE:
+//            case SHORT:
+//            case CHAR:
+//            case INT:
+//                return "int";
+//            case LONG:
+//                return "long";
+//            case FLOAT:
+//            case DOUBLE:
+//                return "float";
+//            case REFERENCE: //todo: String?
+//            default:
+//                return "object"; //todo: как-то передать что тут будет ссылка с ключём на другую таблицу
+//        }
     }
 
-    default Column<C> read(C object, ResultSet resultSet) {
+    default Column<T, C> read(C object, ResultSet resultSet) {
         try {
             toSrc().set(object, resultSet.getDouble(toSqlName()));
         } catch (IllegalAccessException | SQLException e) {
@@ -80,6 +75,6 @@ public interface Column<C> extends Field<C> {
     }
 
     default String toCreateQuery() {
-        return toSqlName() + " " + SqlType.toString(this);
+        return toSqlName() + " " + sqlType();
     }
 }

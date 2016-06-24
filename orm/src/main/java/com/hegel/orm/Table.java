@@ -40,16 +40,20 @@ public interface Table<C> extends Class<C> {
 
     default String sqlCreateQuery() {
         return "CREATE TABLE " + toSrc().getSimpleName() + " (" +
-                columns().map(column -> column.toCreateQuery());
+                columns().map(Column::toCreateQuery).collect(Collectors.joining(", "));
     }
 
     static <C> Table<C> wrap(java.lang.Class<C> aClass) {
         return () -> aClass;
     }
 
+    static <C> Table<C> wrap(Class<C> cClass) {
+        return wrap(cClass.toSrc());
+    }
+
     @SuppressWarnings("unchecked")
-    static <C> Table<C> wrap(C aClass) {
-        return wrap((java.lang.Class<C>) aClass.getClass());
+    static <C> Table<C> wrap(C c) {
+        return wrap((java.lang.Class<C>) c.getClass());
     }
 
     default Stream<Column<C>> columns() {

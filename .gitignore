@@ -1,0 +1,20 @@
+# IntelliJ project files #
+.idea
+*.ipr
+out
+classes
+*.class
+
+# Eclipse project files #
+.classpath
+.project
+.settings
+
+# Gradle #
+target
+gradlew*
+
+# Package Files #
+*.jar
+*.war
+*.ear

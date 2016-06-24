@@ -29,7 +29,7 @@ public class HttpRequest {
     private int timeout;
 
     public HttpRequest(URL url) {
-        this(url, getTypicalHeaders(url), GET, 3000);
+        this(url, getTypicalHeaders(url), GET, 3_000);
     }
 
     public HttpRequest(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
@@ -55,11 +55,11 @@ public class HttpRequest {
         }
     }
 
-    static public String get(URL url) {
+    public static String get(URL url) {
         return new HttpRequest(url).getResult();
     }
 
-    static public String get(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
+    public static String get(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
         return new HttpRequest(url, headers, method, timeout).getResult();
     }
 
@@ -68,8 +68,6 @@ public class HttpRequest {
     private static void trustToAllCertificates() {
         if (isTrustToAllCertificatesNotCalled) // Method should execute one time for program start
             try {
-                isTrustToAllCertificatesNotCalled = false;
-
                 addProvider(new Provider());
                 SSLContext sc = SSLContext.getInstance("SSL");
                 sc.init(null, new TrustManager[]{new X509TrustManager() {
@@ -79,11 +77,14 @@ public class HttpRequest {
                 }}, new SecureRandom());
                 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
                 HttpsURLConnection.setDefaultHostnameVerifier((urlHostName, session) -> {
-                    if (!urlHostName.equalsIgnoreCase(session.getPeerHost()))
+                    if (!urlHostName.equalsIgnoreCase(session.getPeerHost())) {
                         out.println("Warning: URL host '" + urlHostName + "' is different to SSLSession host '"
                                 + session.getPeerHost() + "'.");
+                    }
                     return true;
                 });
+
+                isTrustToAllCertificatesNotCalled = false;
             } catch (NoSuchAlgorithmException | KeyManagementException e) {
                 e.printStackTrace();
             }

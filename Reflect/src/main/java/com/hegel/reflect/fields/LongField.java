@@ -1,7 +1,7 @@
 package com.hegel.reflect.fields;
 
 @FunctionalInterface
-public interface LongField<C> extends Field<C> {
+public interface LongField<C> extends Field<Long, C> {
 
     static <C> LongField<C> wrap(java.lang.reflect.Field field) {
         assert field.getType() == long.class;
@@ -9,21 +9,26 @@ public interface LongField<C> extends Field<C> {
         return () -> field;
     }
 
-    default long getValue(C object) {
+    @Override
+    default Long value(C c) {
+        return primitiveValue(c);
+    }
+
+    default long primitiveValue(C object) {
         try {
-            return toSrc().getInt(object);
+            return toSrc().getLong(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    default long getValue() {
+    default long primitiveValue() {
         assert isStatic();
-        return getValue(null);
+        return primitiveValue(null);
     }
 
     @Override
     default String toString(C object) {
-        return Long.toString(getValue(object));
+        return Long.toString(primitiveValue(object));
     }
 }

@@ -16,7 +16,7 @@ public class TableTest {
 
     @Before
     public void setUp() throws Exception {
-        dbService = new H2DbService();
+        dbService = DbService.create("org.h2.Driver", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
     }
 //
 //    @After
@@ -44,9 +44,6 @@ public class TableTest {
     @Test
     @Ignore
     public void calculateCreateDbQuery() {
-
-        
-
         assertEquals(
                 "CREATE TABLE User (" +
                         "    id            INT AUTO_INCREMENT," +
@@ -59,6 +56,7 @@ public class TableTest {
     }
 
     @Test
+    @Ignore
     public void sqlCreateQueryXML() throws Exception {
         Table<User> userTable = Table.wrap(User.class);
 //        userTable.toLiquibaseXML(new FileWriter("output2.xml"));
@@ -70,11 +68,6 @@ public class TableTest {
     @Test
     public void getFromDB() throws ClassNotFoundException, SQLException {
         Class<User> userClass = Class.wrap(User.class);
-
-        java.lang.Class.forName("org.h2.Driver");
-//        try (Connection conn = DriverManager.getConnection("jdbc:h2:~/test", "", "")) {
-//
-//        }
 
 //        userClass.fromDB()
     }

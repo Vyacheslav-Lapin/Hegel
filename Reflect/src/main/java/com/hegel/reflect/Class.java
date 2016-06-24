@@ -1,20 +1,22 @@
 package com.hegel.reflect;
 
+import com.hegel.core.wrappers.Wrapper;
 import com.hegel.reflect.fields.Field;
-import com.hegel.reflect.methods.Method;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.hegel.reflect.BaseType.from;
+
 @FunctionalInterface
-public interface Class<C> {
+public interface Class<C> extends Wrapper<java.lang.Class<C>> {
 
-    java.lang.Class<C> toSrc();
-
-    static <C> Class<C> wrap(java.lang.Class<C> tClass) {
-        return () -> tClass;
+    static <C> Class<C> wrap(java.lang.Class<C> aClass) {
+        return () -> aClass;
     }
 
     @SuppressWarnings("unchecked")
@@ -22,8 +24,16 @@ public interface Class<C> {
         return () -> ((java.lang.Class<C>) obj.getClass());
     }
 
+    default boolean isPrimitive() {
+        return from(this) != BaseType.REFERENCE;
+    }
+
+    default Class<?> boxType() {
+        return wrap(BaseType.boxType(toSrc()));
+    }
+
     @SuppressWarnings("unchecked")
-    default <F extends Field<C>> Optional<F> getField(String name) {
+    default <T, F extends Field<T, C>> Optional<F> getField(String name) {
         try {
             return Optional.of(Field.wrap(toSrc().getDeclaredField(name)));
         } catch (NoSuchFieldException e) {
@@ -31,17 +41,17 @@ public interface Class<C> {
         }
     }
 
-    default Stream<Field<C>> fields() {
+    default Stream<Field<?, C>> fields() {
         return Stream.of(toSrc().getDeclaredFields()).map(Field::wrap);
     }
 
-    default Stream<Field<C>> dynamicFields() {
+    default Stream<Field<?, C>> dynamicFields() {
         return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
     }
 
-    default Stream<Field<C>> staticFields() {
+    default Stream<Field<?, C>> staticFields() {
         return Stream.of(toSrc().getDeclaredFields())
                 .filter(field -> Modifier.isStatic(field.getModifiers()))
                 .map(Field::wrap);
@@ -66,29 +76,32 @@ public interface Class<C> {
         return false;
     }
 
-    default <M extends Method<C>> Stream<M> methods() {
+    @SuppressWarnings("unchecked")
+    default <T> Stream<Method<T, C>> methods() {
         return Stream.of(toSrc().getMethods()).map(Method::wrap);
     }
 
-    default <M extends Method<C>> Stream<M> dynamicMethods() {
+    @SuppressWarnings("unchecked")
+    default <T> Stream<Method<T, C>> dynamicMethods() {
         return Stream.of(toSrc().getMethods())
                 .filter(method -> !Modifier.isStatic(method.getModifiers()))
                 .map(Method::wrap);
     }
 
-    default <M extends Method<C>> Stream<M> staticMethods() {
+    @SuppressWarnings("unchecked")
+    default <T> Stream<Method<T, C>> staticMethods() {
         return Stream.of(toSrc().getMethods())
                 .filter(method -> Modifier.isStatic(method.getModifiers()))
                 .map(Method::wrap);
     }
 
     @SuppressWarnings("unchecked")
-    default <M extends Method<C>> Optional<M> getMethod(String name, Class<?>... params) {
+    default <T> Optional<Method<T, C>> getMethod(String name, Class<?>... params) {
         java.lang.Class<C>[] paramsArray = Arrays.stream(params).map(Class::toSrc).toArray(java.lang.Class[]::new);
         return getMethod(name, paramsArray);
     }
 
-    default <M extends Method<C>> Optional<M> getMethod(String name, java.lang.Class<?>... params) {
+    default <T> Optional<Method<T, C>> getMethod(String name, java.lang.Class<?>... params) {
         try {
             return Optional.of(Method.wrap(toSrc().getMethod(name, params)));
         } catch (NoSuchMethodException e) {
@@ -96,9 +109,19 @@ public interface Class<C> {
         }
     }
 
-//    @SuppressWarnings("unchecked")
-//    default Stream<Constructor<C>> getConstructors() {
-//        return Stream.of((Constructor<C>[]) theClass.getConstructors())
-//                .map(Constructor::wrap);
-//    }
+    default Stream<Constructor<C>> constructors() {
+        return Stream.of(toSrc().getConstructors()).map(Constructor::wrap);
+    }
+
+    default String getName() {
+        return toSrc().getSimpleName();
+    }
+
+    default Optional<Constructor<C>> findConstructorByParamNames(Set<String> paramNames) {
+        return constructors()
+                .filter(tConstructor -> tConstructor.parameters()
+                        .map(Parameter::getName)
+                        .allMatch(paramNames::contains))
+                .max(Comparator.comparing(Constructor::getParameterCount)); // TODO: find better criteria
+    }
 }

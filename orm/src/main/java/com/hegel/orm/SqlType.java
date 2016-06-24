@@ -7,26 +7,25 @@ import org.omg.CORBA.Object;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Arrays;
-
-import static com.hegel.reflect.BaseType.*;
+import java.util.Optional;
 
 public enum SqlType {
-    BIT(BOOLEAN),
-    TINYINT(BYTE),
-    SMALLINT(SHORT),
-    INTEGER(INT),
-    BIGINT(LONG),
-    REAL(BaseType.FLOAT),
-    FLOAT(BaseType.DOUBLE),
-    DOUBLE(BaseType.DOUBLE),
+    BIT(boolean.class),
+    TINYINT(byte.class),
+    SMALLINT(short.class),
+    INTEGER(int.class),
+    BIGINT(long.class),
+    REAL(float.class),
+//    FLOAT(double.class),
+    DOUBLE(double.class),
     BINARY(byte[].class),
-    VARBINARY(byte[].class),
-    LONGVARBINARY(byte[].class),
-    NCHAR(String.class),
-    NVARCHAR(String.class),
+//    VARBINARY(byte[].class),
+//    LONGVARBINARY(byte[].class),
+//    NCHAR(String.class),
+//    NVARCHAR(String.class),
     LONGVARCHAR(String.class),
     NUMERIC(BigDecimal.class),
-    DECIMAL(BigDecimal.class),
+//    DECIMAL(BigDecimal.class),
     DATE(Date.class),
     TIME(Time.class),
     TIMESTAMP(Timestamp.class),
@@ -37,25 +36,27 @@ public enum SqlType {
     STRUCT(Struct.class),
     REF(Ref.class);
 
-    private BaseType baseType;
-    private Class<?> objectType;
+    private Class<?> type;
 
-    SqlType(BaseType baseType) {
-        this.baseType = baseType;
+    SqlType(java.lang.Class<?> type) {
+        this(Class.wrap(type));
     }
 
-    SqlType(java.lang.Class<?> objectType) {
-        this(Class.wrap(objectType));
+    SqlType(Class<?> type) {
+        this.type = type;
     }
 
-    SqlType(Class<?> objectType) {
-        this(OBJECT);
-        this.objectType = objectType;
+    public static SqlType from(BaseType baseType) {
+        return Arrays.stream(values()).filter(sqlType -> sqlType.baseType == baseType).findFirst().orElseGet(() ->);
     }
 
-    public static <C> String toString(Column<C> cColumn) {
+    public static SqlType from(Class<?> objectType) {
+        return Arrays.stream(values()).filter(sqlType -> sqlType.type == objectType).findFirst().get();
+    }
+
+    public static <T, C> String toString(Column<T, C> cColumn) {
         return Arrays.stream(values())
-                .filter(sqlType -> sqlType.baseType.getType().equals(cColumn.toSrc()))
-                .findAny();
+                .filter(sqlType -> sqlType.baseType.getPrimitiveClass().equals(cColumn.getOwnerClass().toSrc()))
+                .findAny().get().toString();
     }
 }
