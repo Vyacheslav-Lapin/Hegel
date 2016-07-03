@@ -1,9 +1,6 @@
 package com.hegel.reflect;
 
-import java.lang.Class;
 import java.util.stream.Stream;
-
-import static com.hegel.reflect.Class.isInherited;
 
 public enum BaseType {
     BOOLEAN(boolean.class),
@@ -16,10 +13,10 @@ public enum BaseType {
     DOUBLE(double.class),
     OBJECT(Object.class);
 
-    private java.lang.Class<?> aClass;
+    private Class<?> aClass;
 
     BaseType(java.lang.Class<?> aClass) {
-        this.aClass = aClass;
+        this.aClass = Class.wrap(aClass);
     }
 
     public Class<?> getType() {
@@ -28,7 +25,8 @@ public enum BaseType {
 
     public static BaseType from(Class<?> type) {
         return Stream.of(BaseType.values())
-                .filter(baseType -> isInherited(type, baseType.getType()))
-                .findAny().orElse(OBJECT);
+                .filter(baseType -> type.isInherited(baseType.getType()))
+                .findAny()
+                .orElse(OBJECT);
     }
 }

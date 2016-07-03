@@ -47,16 +47,22 @@ public enum SqlType {
     }
 
     public static SqlType from(BaseType baseType) {
-        return Arrays.stream(values()).filter(sqlType -> sqlType.baseType == baseType).findFirst().orElseGet(() ->);
+        return Arrays.stream(values())
+                .filter(sqlType -> sqlType.type.equals(baseType.getType()))
+                .findFirst()
+                .orElse(DISTINCT);
     }
 
     public static SqlType from(Class<?> objectType) {
-        return Arrays.stream(values()).filter(sqlType -> sqlType.type == objectType).findFirst().get();
+        return Arrays.stream(values())
+                .filter(sqlType -> sqlType.type.equals(objectType))
+                .findFirst()
+                .orElse(DISTINCT);
     }
 
-    public static <T, C> String toString(Column<T, C> cColumn) {
+    public static <T, C> String toString(Column<C> cColumn) {
         return Arrays.stream(values())
-                .filter(sqlType -> sqlType.baseType.getPrimitiveClass().equals(cColumn.getOwnerClass().toSrc()))
+                .filter(sqlType -> sqlType.type.toSrc().getPrimitiveClass().equals(cColumn.getOwnerClass().toSrc()))
                 .findAny().get().toString();
     }
 }

@@ -11,8 +11,10 @@ import java.util.Optional;
 public interface Field<C> extends Wrapper<java.lang.reflect.Field> {
 
     default BaseType getType() {
-        return BaseType.from(toSrc().getType());
+        return BaseType.from(Class.wrap(toSrc().getType()));
     }
+
+    default Class<?> getOwnerClass() { return Class.wrap(toSrc().getDeclaringClass()); }
 
     default int getModifiers() {
         return toSrc().getModifiers();

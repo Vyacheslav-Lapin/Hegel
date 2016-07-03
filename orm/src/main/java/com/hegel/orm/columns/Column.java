@@ -68,7 +68,7 @@ public interface Column<C> extends Field<C> {
 //        }
     }
 
-    default Column<T, C> read(C object, ResultSet resultSet) {
+    default Column<C> read(C object, ResultSet resultSet) {
         try {
             toSrc().set(object, resultSet.getDouble(toSqlName()));
         } catch (IllegalAccessException | SQLException e) {
