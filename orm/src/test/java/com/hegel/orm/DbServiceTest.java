@@ -56,7 +56,7 @@ public class DbServiceTest {
         dbService.requestCollection(
                 rs -> new Person(rs.getInt("id"), rs.getString("name")),
                 "SELECT id, name FROM Person"
-        ).ifPresent(persons -> persons.stream().forEach(System.out::println));
+        ).ifPresent(persons -> persons.forEach(System.out::println));
     }
 
     @After
