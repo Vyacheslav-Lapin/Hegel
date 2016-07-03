@@ -1,9 +1,8 @@
-<<<<<<< Updated upstream
 # IntelliJ project files #
 .idea
-*.ipr
-out
 classes
+out
+build
 *.class
 
 # Eclipse project files #
@@ -15,25 +14,7 @@ classes
 target
 gradlew*
 
-=======
-*.class
-
->>>>>>> Stashed changes
 # Package Files #
 *.jar
 *.war
 *.ear
-<<<<<<< Updated upstream
-=======
-
-# IDEA & Eclipse
-*.iml
-.idea
-/out
-
-# Gradle & Maven
-target
-build
-.gradle
-gradle.properties
->>>>>>> Stashed changes

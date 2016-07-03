@@ -1,6 +1,0 @@
-dependencies {
-    compile project(':core')
-    compile 'net.sf.saxon:Saxon-HE:+'
-    compile 'org.jsoup:jsoup:+'
-    compile 'net.sourceforge.htmlcleaner:htmlcleaner:+'
-}
