@@ -1,54 +1,34 @@
 package com.hegel.reflect.fields;
 
+import com.hegel.core.wrappers.Wrapper;
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
-import com.hegel.reflect.Member;
 
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 
-public interface Field<T, C> extends Member<T, C, java.lang.reflect.Field> {
+@FunctionalInterface
+public interface Field<C> extends Wrapper<java.lang.reflect.Field> {
 
-    @SuppressWarnings("unchecked")
-    static <T, C, F extends Field<T, C>> F wrap(java.lang.reflect.Field field) {
-        switch (BaseType.from(field.getType())) {
-            case INT:
-            case SHORT:
-            case CHAR:
-            case BYTE:
-                return (F) IntField.wrap(field);
-            case DOUBLE:
-            case FLOAT:
-                return (F) DoubleField.wrap(field);
-            case LONG:
-                return (F) LongField.wrap(field);
-            default:
-                field.setAccessible(true);
-                return (F) (Field<T, C>) () -> field;
-        }
+    default BaseType getType() {
+        return BaseType.from(toSrc().getType());
     }
 
-    static <T, C, F extends Field<T, C>> Optional<F> wrap(String name, Class<C> declaringClass) {
+    default int getModifiers() {
+        return toSrc().getModifiers();
+    }
+
+    @SuppressWarnings("unchecked")
+    static <C, F extends Field<C>> F wrap(java.lang.reflect.Field field) {
+        java.lang.Class<?> type = field.getType();
+        return (F) (type == int.class || type == short.class || type == char.class || type == byte.class ? IntField.wrap(field) :
+                type == long.class ? LongField.wrap(field) :
+                        type == double.class || type == float.class ? DoubleField.wrap(field) :
+                                ObjectField.wrap(field));
+    }
+
+    static <C> Optional<Field<C>> wrap(String name, Class<C> declaringClass) {
         return declaringClass.getField(name);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    default Class<T> getType() {
-        return Class.wrap((java.lang.Class<T>) toSrc().getType());
-    }
-
-    @SuppressWarnings("unchecked")
-    default T value(C c) {
-        try {
-            return (T) toSrc().get(c);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    default T value() {
-        assert isStatic();
-        return value(null);
     }
 
     default String toString(C object) {
@@ -59,13 +39,42 @@ public interface Field<T, C> extends Member<T, C, java.lang.reflect.Field> {
         }
     }
 
-    @Override
+    default boolean isStatic() {
+        return Modifier.isStatic(getModifiers());
+    }
+
+    default boolean isTransient() {
+        return Modifier.isTransient(getModifiers());
+    }
+
+    default boolean isFinal() {
+        return Modifier.isFinal(getModifiers());
+    }
+
     default boolean isPrimitive() {
         return toSrc().getType().isPrimitive();
     }
 
+    default boolean isPrivate() {
+        return Modifier.isPrivate(getModifiers());
+    }
+
+    default boolean isVolatile() {
+        return Modifier.isVolatile(getModifiers());
+    }
+
+    default boolean isPackagePrivate() {
+        return !Modifier.isPrivate(getModifiers())
+                && !Modifier.isProtected(getModifiers())
+                && !Modifier.isPublic(getModifiers());
+    }
+
+    default boolean isPublic() {
+        return Modifier.isPublic(getModifiers());
+    }
+
 //    static <T> void parseSet(String value, T t, java.lang.reflect.Field field) {
-//        Class<?> type = field.getPrimitiveClass();
+//        Class<?> type = field.getType();
 //        try {
 //            if (type == String.class) field.set(t, value);
 //

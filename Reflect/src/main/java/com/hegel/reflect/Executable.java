@@ -29,11 +29,11 @@ public interface Executable<T, C, E extends java.lang.reflect.Executable> extend
     default boolean paramTypesCheck(Object[] params) { // TODO: 3/22/2016 Move this method to Util-interface com.hegel.core.Streams
         return Arrays.equals(
                 Arrays.stream(toSrc().getParameterTypes())
-                        .map(BaseType::boxType)
+                        .map(BaseType::from)
                         .toArray(java.lang.Class[]::new),
                 Arrays.stream(params)
                         .map(Object::getClass)
-                        .map(BaseType::boxType)
+                        .map(BaseType::from)
                         .toArray(java.lang.Class[]::new));
     }
 

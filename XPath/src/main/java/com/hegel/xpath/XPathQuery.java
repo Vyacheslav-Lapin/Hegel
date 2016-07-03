@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 
+@SuppressWarnings("WeakerAccess")
 public class XPathQuery {
 
     private XPathSelector xPathSelector;

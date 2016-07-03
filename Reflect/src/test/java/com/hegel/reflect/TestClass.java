@@ -2,7 +2,7 @@ package com.hegel.reflect;
 
 public class TestClass {
 
-    private String string = "some text";
+    private String string = "мама мыла раму";
 
     volatile int anInt = 5;
 

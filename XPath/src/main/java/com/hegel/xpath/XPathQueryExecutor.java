@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 
+@SuppressWarnings("WeakerAccess")
 public class XPathQueryExecutor {
 
     protected Processor processor;

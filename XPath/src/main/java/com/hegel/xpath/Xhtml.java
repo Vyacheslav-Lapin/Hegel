@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+@SuppressWarnings("WeakerAccess")
 public class Xhtml extends Xml {
 
     protected Xhtml(InputStream inputStream) {

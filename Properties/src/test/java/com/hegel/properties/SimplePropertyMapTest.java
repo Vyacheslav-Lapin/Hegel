@@ -1,15 +1,17 @@
 package com.hegel.properties;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
+/**
+ * @author Vyacheslav_Lapin
+ */
 public class SimplePropertyMapTest {
 
     static final String RESOURCES_DIR_PATH = "src/test/resources/";
@@ -41,11 +43,14 @@ public class SimplePropertyMapTest {
         System.out.println(propertyMap);
     }
 
+    @Ignore
     @Test
     public void getBean() {
+        SimpleTestPojo simpleTestPojo = PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class);
+
         PropertyMap props = PropertyMap.fromFile(CONFIG_FILE_PATH);
         SimpleTestPojo expected = new SimpleTestPojo(props.get("param2"), Integer.parseInt(props.get("intParam")));
 
-        assertThat(PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class), is(expected));
+        assertEquals(expected, simpleTestPojo);
     }
 }

@@ -1,5 +1,6 @@
 package com.hegel.orm;
 
+import com.hegel.orm.columns.Column;
 import com.hegel.reflect.Class;
 import org.junit.Before;
 import org.junit.Ignore;

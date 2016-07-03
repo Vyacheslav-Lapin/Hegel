@@ -1,5 +1,6 @@
-package com.hegel.orm;
+package com.hegel.orm.columns;
 
+import com.hegel.orm.SqlType;
 import com.hegel.reflect.fields.Field;
 
 import javax.xml.stream.XMLStreamException;
@@ -7,28 +8,30 @@ import javax.xml.stream.XMLStreamWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface Column<T, C> extends Field<T, C> {
+import static java.lang.Character.toUpperCase;
 
-    static <T, C> Column<T, C> wrap(Field<T, C> cField) {
+public interface Column<C> extends Field<C> {
+
+    static <C> Column<C> wrap(Field<C> cField) {
         return cField::toSrc;
     }
 
     default String toSqlName() {
-        StringBuilder result = new StringBuilder();
-        for (char character : toSrc().getName().toCharArray())
-            if (Character.isUpperCase(character))
-                result.append('_').append(Character.toLowerCase(character));
-            else
-                result.append(character);
-        return result.toString();
+        return toSrc().getName().replaceAll("([A-Z])", "_$1").toLowerCase();
     }
 
     static String fromSqlName(String sqlName) {
+
+        boolean isFirstString = true;
         StringBuilder result = new StringBuilder();
-        char character,
-                chars[] = sqlName.toCharArray();
-        for (int i = 0; i < chars.length; )
-            result.append((character = chars[i++]) == '_' ? Character.toUpperCase(chars[i++]) : character);
+        for (String string: sqlName.split("_"))
+            if (isFirstString) {
+                result.append(string);
+                isFirstString = false;
+            } else
+                result.append(toUpperCase(string.charAt(0)))
+                        .append(string.substring(1));
+
         return result.toString();
     }
 

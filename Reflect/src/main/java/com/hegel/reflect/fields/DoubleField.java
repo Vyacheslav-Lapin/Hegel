@@ -1,7 +1,7 @@
 package com.hegel.reflect.fields;
 
 @FunctionalInterface
-public interface DoubleField<C> extends Field<Double, C> {
+public interface DoubleField<C> extends Field<C> {
 
     static <C> DoubleField<C> wrap(java.lang.reflect.Field field) {
         assert field.getType() == double.class || field.getType() == float.class;
@@ -9,12 +9,7 @@ public interface DoubleField<C> extends Field<Double, C> {
         return () -> field;
     }
 
-    @Override
-    default Double value(C c) {
-        return primitiveValue(c);
-    }
-
-    default double primitiveValue(C object) {
+    default double getValue(C object) {
         try {
             return toSrc().getDouble(object);
         } catch (IllegalAccessException e) {
@@ -22,18 +17,13 @@ public interface DoubleField<C> extends Field<Double, C> {
         }
     }
 
-    default double primitiveValue() {
+    default double getValue() {
         assert isStatic();
-        return primitiveValue(null);
-    }
-
-    @Override
-    default Double value() {
-        return primitiveValue();
+        return getValue(null);
     }
 
     @Override
     default String toString(C object) {
-        return Double.toString(primitiveValue(object));
+        return Double.toString(getValue(object));
     }
 }

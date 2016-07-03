@@ -1,5 +1,6 @@
 package com.hegel.orm;
 
+import com.hegel.orm.columns.Column;
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
 import org.omg.CORBA.Object;
@@ -7,7 +8,6 @@ import org.omg.CORBA.Object;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum SqlType {
     BIT(boolean.class),

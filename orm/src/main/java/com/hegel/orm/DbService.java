@@ -2,6 +2,7 @@ package com.hegel.orm;
 
 import com.hegel.core.functions.ExceptionalFunction;
 import com.hegel.core.Private;
+import com.hegel.orm.columns.Column;
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
 import com.hegel.reflect.Parameter;

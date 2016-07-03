@@ -9,8 +9,10 @@ subprojects {
     }
 
     dependencies {
+        compile 'ch.qos.logback:logback-classic:+'
         compileOnly 'org.projectlombok:lombok:+'
         testCompile 'junit:junit:+'
+        testCompile 'org.hamcrest:hamcrest-all:+'
     }
 
     version = '1.0-SNAPSHOT'

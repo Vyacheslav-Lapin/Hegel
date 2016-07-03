@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@SuppressWarnings("WeakerAccess")
 public class Xml {
 
     private XdmNode document;
@@ -38,13 +39,13 @@ public class Xml {
 
     public Xml(URL url, Map<String, String> headers, Connection.Method method, int timeout) {
         this();
-        //TODO: Сделать через Future
+        //TODO: Rewrite with Future
         document = xPathQueryExecutor.toDocument(HttpRequest.get(url, headers, method, timeout));
     }
 
     public Xml(URL url) {
         this();
-        //TODO: Сделать через Future
+        //TODO: Rewrite with Future
         document = xPathQueryExecutor.toDocument(HttpRequest.get(url));
     }
 
