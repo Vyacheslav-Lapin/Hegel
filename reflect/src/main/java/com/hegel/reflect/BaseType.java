@@ -11,12 +11,16 @@ public enum BaseType {
     LONG(long.class),
     FLOAT(float.class),
     DOUBLE(double.class),
-    OBJECT(Object.class);
+    REFERENCE(Object.class);
 
     private Class<?> aClass;
 
     BaseType(java.lang.Class<?> aClass) {
-        this.aClass = Class.wrap(aClass);
+        this(Class.wrap(aClass));
+    }
+
+    BaseType(Class<?> aClass) {
+        this.aClass = aClass;
     }
 
     public Class<?> getType() {
@@ -27,6 +31,10 @@ public enum BaseType {
         return Stream.of(BaseType.values())
                 .filter(baseType -> type.isInherited(baseType.getType()))
                 .findAny()
-                .orElse(OBJECT);
+                .orElse(REFERENCE);
+    }
+
+    public static BaseType from(java.lang.Class<?> type) {
+        return from(Class.wrap(type));
     }
 }

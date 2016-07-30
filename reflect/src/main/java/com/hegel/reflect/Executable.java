@@ -26,7 +26,8 @@ public interface Executable<T, C, E extends java.lang.reflect.Executable> extend
         return Arrays.stream(toSrc().getParameterTypes()).map(Class::wrap);
     }
 
-    default boolean paramTypesCheck(Object[] params) { // TODO: 3/22/2016 Move this method to Util-interface com.hegel.core.Streams
+    // TODO: 3/22/2016 Move this method to Util-interface com.hegel.core.Streams
+    default boolean paramTypesCheck(Object[] params) {
         return Arrays.equals(
                 Arrays.stream(toSrc().getParameterTypes())
                         .map(BaseType::from)
