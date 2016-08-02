@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
  * marked methods.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 public @interface Private {
 }

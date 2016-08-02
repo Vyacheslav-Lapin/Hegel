@@ -3,6 +3,7 @@ package com.hegel.core.functions;
 import com.hegel.core.Either;
 import com.hegel.core.wrappers.Wrapper;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @FunctionalInterface
@@ -34,6 +35,10 @@ public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E
         }
     }
 
+    default <E1 extends Throwable> T getOrThrowUnchecked() throws E1 {
+        return getOrThrow(RuntimeException::new);
+    }
+    
     default <E1 extends Throwable> T getOrThrow(Function<E, E1> exceptionMapper) throws E1 {
         return mapException(exceptionMapper).getOrThrow();
     }
@@ -46,5 +51,9 @@ public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E
     static <T, E extends Throwable> Exceptional<T, E> withException(E exception) {
         Either<T, E> right = Either.right(exception);
         return () -> right;
+    }
+
+    default Optional<T> toOptional() {
+        return Optional.ofNullable(toSrc().left());
     }
 }
