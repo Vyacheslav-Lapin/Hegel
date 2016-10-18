@@ -18,7 +18,7 @@ public interface Executable<T, C, E extends java.lang.reflect.Executable> extend
         return execute(null, params);
     }
 
-    default Stream<Parameter<?, C, E>> parameters() {
+    default Stream<Parameter<?, Executable<T, C, E>>> parameters() {
         return Stream.of(toSrc().getParameters()).map(Parameter::wrap);
     }
 

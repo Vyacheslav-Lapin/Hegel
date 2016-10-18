@@ -1,7 +1,7 @@
 package com.hegel.core.functions;
 
 import com.hegel.core.Either;
-import com.hegel.core.wrappers.Wrapper;
+import com.hegel.core.Wrapper;
 
 import java.util.Optional;
 import java.util.function.Function;

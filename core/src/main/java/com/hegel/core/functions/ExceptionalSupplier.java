@@ -30,15 +30,15 @@ public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Ex
         return get().toOptional();
     }
 
-    static <T, E extends Throwable> Exceptional<T, E> call(ExceptionalSupplier<T, E> exceptionalSupplier) {
+    static <T, E extends Exception> Exceptional<T, E> call(ExceptionalSupplier<T, E> exceptionalSupplier) {
         return exceptionalSupplier.get();
     }
 
-    static <T, E extends Throwable> T getOrThrowUnchecked(ExceptionalSupplier<T, E> exceptionalSupplier) {
+    static <T, E extends Exception> T getOrThrowUnchecked(ExceptionalSupplier<T, E> exceptionalSupplier) {
         return call(exceptionalSupplier).getOrThrowUnchecked();
     }
 
-    static <T, E extends Throwable> Supplier<T> toUncheckedSupplier(ExceptionalSupplier<T, E> exceptionalSupplier) {
-        return exceptionalSupplier::getOrThrowUnchecked;
+    static <T> T avoid(Object t) {
+        return null;
     }
 }

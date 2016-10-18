@@ -7,13 +7,9 @@ import java.util.function.Function;
 
 public interface ConnectionPoolExecutor extends ConnectionPool {
 
-    static ConnectionPool get() {
-        return null; // TODO: 3/19/2016
-    }
-
     default <T> CompletableFuture<T> select(Function<Connection, T> connectionExtractor) {
         return CompletableFuture.supplyAsync(() -> {
-            try (Connection connection = getConnection()) {
+            try (Connection connection = get()) {
                 return connectionExtractor.apply(connection);
             } catch (SQLException e) {
                 throw new RuntimeException(e);

@@ -1,6 +1,7 @@
 package com.hegel.core.functions;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface ExceptionalFunction<T, R, E extends Throwable> extends Function<T, Exceptional<R, E>> {
@@ -17,10 +18,6 @@ public interface ExceptionalFunction<T, R, E extends Throwable> extends Function
         }
     }
 
-    default R getOrThrowUnchecked(T param) {
-        return apply(param).getOrThrowUnchecked();
-    }
-
     static <T, R, E extends Throwable> R getOrThrowUnchecked(ExceptionalFunction<T, R, E> exceptionalFunction,
                                                              T param) {
         return exceptionalFunction.apply(param).getOrThrowUnchecked();
@@ -30,8 +27,13 @@ public interface ExceptionalFunction<T, R, E extends Throwable> extends Function
         return t -> getOrThrowUnchecked(exceptionalFunction, t);
     }
 
-    static <T, R, E extends Exception> ExceptionalSupplier<R, E> carry(ExceptionalFunction<T, R, E> exceptionalFunction,
+    static <T, R, E extends Throwable> ExceptionalSupplier<R, E> carry(ExceptionalFunction<T, R, E> exceptionalFunction,
                                                                        T param) {
         return () -> exceptionalFunction.get(param);
+    }
+
+    static <T, R, E extends Throwable> Supplier<R> carryUnchacked(ExceptionalFunction<T, R, E> exceptionalFunction,
+                                                                  T param) {
+        return carry(exceptionalFunction, param)::getOrThrowUnchecked;
     }
 }

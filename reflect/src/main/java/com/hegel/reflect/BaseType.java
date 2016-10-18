@@ -28,7 +28,7 @@ public enum BaseType {
     }
 
     public static BaseType from(Class<?> type) {
-        return Stream.of(BaseType.values())
+        return Stream.of(values())
                 .filter(baseType -> type.isInherited(baseType.getType()))
                 .findAny()
                 .orElse(REFERENCE);

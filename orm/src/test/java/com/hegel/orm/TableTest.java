@@ -2,6 +2,7 @@ package com.hegel.orm;
 
 import com.hegel.orm.columns.Column;
 import com.hegel.reflect.Class;
+import model.User;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class TableTest {
 
     @Before
     public void setUp() throws Exception {
-        dbService = DbService.create("org.h2.Driver", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
+        dbService = DbService.from("org.h2.Driver", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "", "");
     }
 //
 //    @After

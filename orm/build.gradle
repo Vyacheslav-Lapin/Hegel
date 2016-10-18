@@ -1,5 +1,11 @@
 dependencies {
     compile project(":reflect")
     compile project(":core")
+    compile project(":properties")
+
+    // Validation
+    compile 'javax.validation:validation-api:+'
+
+    testCompile 'org.projectlombok:lombok:+'
     testCompile "com.h2database:h2:+"
 }

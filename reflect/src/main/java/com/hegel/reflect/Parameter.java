@@ -2,8 +2,12 @@ package com.hegel.reflect;
 
 import com.hegel.core.wrappers.Wrapper;
 
+/**
+ * @param <T> type of parameter
+ * @param <E> method or constructor
+ */
 @FunctionalInterface
-public interface Parameter<T, C, E extends java.lang.reflect.Executable> extends Wrapper<java.lang.reflect.Parameter> {
+public interface Parameter<T, E extends Executable<?, ?, ?>> extends Wrapper<java.lang.reflect.Parameter> {
 
     static Parameter wrap(java.lang.reflect.Parameter parameter) {
         return () -> parameter;
@@ -21,10 +25,5 @@ public interface Parameter<T, C, E extends java.lang.reflect.Executable> extends
     @SuppressWarnings("unchecked")
     default E getExecutable() {
         return (E) toSrc().getDeclaringExecutable();
-    }
-
-    @SuppressWarnings("unchecked")
-    default C getDeclaredClass() {
-        return (C) getExecutable().getDeclaringClass();
     }
 }

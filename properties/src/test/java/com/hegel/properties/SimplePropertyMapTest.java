@@ -40,7 +40,7 @@ public class SimplePropertyMapTest {
         PropertyMap propertyMap = PropertyMap.fromFile(CONFIG_FILE_PATH);
         assertEquals(propertyMap.toProperties(), properties);
         assertEquals(propertyMap.get("param2"), properties.getProperty("param2"));
-        System.out.println(propertyMap);
+//        System.out.println(propertyMap);
     }
 
     @Ignore

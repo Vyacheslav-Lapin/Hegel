@@ -1,6 +1,6 @@
 package com.hegel.orm.columns;
 
-import com.hegel.orm.SqlType;
+import com.hegel.orm.JdbcType;
 import com.hegel.reflect.fields.Field;
 
 import javax.xml.stream.XMLStreamException;
@@ -48,8 +48,8 @@ public interface Column<C> extends Field<C> {
     }
 
     default String sqlType() {
-        return SqlType.from(getOwnerClass()).toString();
-//        switch (SqlType.from(getPrimitiveClass())) {
+        return JdbcType.from(getOwnerClass()).toString();
+//        switch (JdbcType.make(getPrimitiveClass())) {
 //            case BOOLEAN:
 //                return "boolean";
 //            case BYTE:

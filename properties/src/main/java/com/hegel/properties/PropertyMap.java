@@ -1,5 +1,7 @@
 package com.hegel.properties;
 
+import com.hegel.reflect.Executable;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,7 +34,7 @@ public interface PropertyMap extends Map<String, String> {
             return PropertyMap.from(
                     Files.lines(path).parallel()
                             .map((String s) -> s.split("="))
-                            .collect(Collectors.toMap(strings -> strings[0], strings -> strings[1]))
+                            .collect(Collectors.toMap(strings -> strings[0], strings -> strings.length > 1 ? strings[1]: ""))
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -49,7 +51,21 @@ public interface PropertyMap extends Map<String, String> {
         return properties;
     }
 
-    static <T> T get(String configFilePath, Class<T> aClass) {
+    static PropertyMap from(String... params) {
+
+        assert params.length % 2 == 0;
+
+        PropertyMap result = new SimplePropertyMap();
+        for (int index = 0; index < params.length;)
+            result.put(params[index++], params[index++]);
+
+        return result;
+    }
+
+    static <T> T get(String configFilePath, Executable<T, ?, ?> executable) {
+
+//        executable.toMethodHandler
+
         return null;
     }
 

@@ -2,7 +2,7 @@ package com.hegel.core.functions;
 
 import java.util.function.BooleanSupplier;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 @FunctionalInterface
 public interface ExceptionalBooleanSupplier<E extends Throwable> extends BooleanSupplier {
 
