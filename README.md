@@ -6,4 +6,4 @@ Java SE 8 Stream API as cover of all popular API`s:
 - JDBC - sub-project "hegel-orm",
 - Serialization (one-nio, Cbor, MsgPack, others) - will be soon,
 - NIO2 - will be soon,
-- SAX/StAX - will be soon.
+- DOM/JDOM/SAX/StAX - will be soon.
