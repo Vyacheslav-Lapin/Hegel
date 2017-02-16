@@ -35,7 +35,8 @@ subprojects {
                 'org.junit.jupiter:junit-jupiter-api:+',
                 'org.hamcrest:java-hamcrest:+'
     }
-}
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.3' //version required
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '3.3' //version required
+    }
 }
