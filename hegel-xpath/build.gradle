@@ -1,0 +1,1 @@
+dependencies {    compile project(':hegel-core'),            'net.sf.saxon:Saxon-HE:+',            'org.jsoup:jsoup:+',            'net.sourceforge.htmlcleaner:htmlcleaner:+'}

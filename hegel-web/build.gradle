@@ -1,0 +1,4 @@
+dependencies {
+    compileOnly 'org.apache.tomcat:tomcat-api:+',
+            'org.apache.tomcat:tomcat-jsp-api:+'
+}

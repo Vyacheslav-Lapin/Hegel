@@ -1,7 +1,8 @@
 rootProject.name = 'Hegel'
 
-include 'core',
-        'xpath',
-        'reflect',
-        'properties',
-        'orm'
+include 'hegel-core',
+        'hegel-xpath',
+        'hegel-reflect',
+        'hegel-properties',
+        'hegel-orm',
+        'hegel-web'

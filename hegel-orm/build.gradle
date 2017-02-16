@@ -1,0 +1,11 @@
+dependencies {
+    compile project(":hegel-reflect")
+    compile project(":hegel-core")
+    compile project(":hegel-properties")
+
+    // Validation
+    compile 'javax.validation:validation-api:+'
+
+    testCompile 'org.projectlombok:lombok:+'
+    testCompile "com.h2database:h2:+"
+}

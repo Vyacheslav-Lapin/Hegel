@@ -1,3 +1,0 @@
-dependencies {
-    compile 'org.hamcrest:hamcrest-core:+'
-}

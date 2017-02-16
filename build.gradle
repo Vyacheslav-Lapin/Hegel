@@ -1,5 +1,10 @@
 subprojects {
+    group 'com.hegel'
+    version '1.0-SNAPSHOT'
+
     apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'org.junit.platform.gradle.plugin'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -8,14 +13,29 @@ subprojects {
         mavenCentral()
     }
 
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+//                artifact sourceJar {
+//                    classifier "sources"
+//                }
+            }
+        }
+    }
+
+    // this turns logging on in tests:
+    test.testLogging.showStandardStreams = true
+
     dependencies {
         compile 'ch.qos.logback:logback-classic:+'
 
         compileOnly 'org.projectlombok:lombok:+'
 
         testCompile 'org.projectlombok:lombok:+',
-                'junit:junit:+'
-    }
+                'org.junit.jupiter:junit-jupiter-api:+',
+                'org.hamcrest:java-hamcrest:+'
 
-    version = '1.0-SNAPSHOT'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:+'
+    }
 }
