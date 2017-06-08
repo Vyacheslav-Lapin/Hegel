@@ -2,29 +2,29 @@ package com.hegel.orm.columns;
 
 import com.hegel.orm.JdbcType;
 import com.hegel.reflect.fields.Field;
+import lombok.SneakyThrows;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static java.lang.Character.toUpperCase;
 
 public interface Column<C> extends Field<C> {
 
     static <C> Column<C> wrap(Field<C> cField) {
-        return cField::toSrc;
+        return cField::get;
     }
 
     default String toSqlName() {
-        return toSrc().getName().replaceAll("([A-Z])", "_$1").toLowerCase();
+        return get().getName().replaceAll("([A-Z])", "_$1").toLowerCase();
     }
 
     static String fromSqlName(String sqlName) {
 
         boolean isFirstString = true;
         StringBuilder result = new StringBuilder();
-        for (String string: sqlName.split("_"))
+        for (String string : sqlName.split("_"))
             if (isFirstString) {
                 result.append(string);
                 isFirstString = false;
@@ -68,12 +68,9 @@ public interface Column<C> extends Field<C> {
 //        }
     }
 
+    @SneakyThrows
     default Column<C> read(C object, ResultSet resultSet) {
-        try {
-            toSrc().set(object, resultSet.getDouble(toSqlName()));
-        } catch (IllegalAccessException | SQLException e) {
-            e.printStackTrace();
-        }
+        get().set(object, resultSet.getDouble(toSqlName()));
         return this;
     }
 

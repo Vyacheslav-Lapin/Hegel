@@ -2,8 +2,9 @@ package com.hegel.core.wrappers;
 
 import java.util.Iterator;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public interface IteratorWrapper<E> extends Iterator<E>, Wrapper<Iterator<E>> {
+public interface IteratorWrapper<E> extends Iterator<E>, Supplier<Iterator<E>> {
 
     static <E> IteratorWrapper<E> wrap(Iterator<E> iterator) {
         return () -> iterator;
@@ -11,21 +12,21 @@ public interface IteratorWrapper<E> extends Iterator<E>, Wrapper<Iterator<E>> {
 
     @Override
     default boolean hasNext() {
-        return toSrc().hasNext();
+        return get().hasNext();
     }
 
     @Override
     default E next() {
-        return toSrc().next();
+        return get().next();
     }
 
     @Override
     default void remove() {
-        toSrc().remove();
+        get().remove();
     }
 
     @Override
     default void forEachRemaining(Consumer<? super E> action) {
-        toSrc().forEachRemaining(action);
+        get().forEachRemaining(action);
     }
 }

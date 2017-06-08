@@ -14,6 +14,6 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * marked methods.
  */
 @Retention(SOURCE)
-@Target({METHOD})
+@Target({METHOD, FIELD})
 public @interface Private {
 }

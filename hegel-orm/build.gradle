@@ -1,11 +1,15 @@
 dependencies {
-    compile project(":hegel-reflect")
-    compile project(":hegel-core")
-    compile project(":hegel-properties")
+    compile project(":hegel-reflect"),
+            project(":hegel-core"),
+            project(":hegel-properties"),
 
-    // Validation
-    compile 'javax.validation:validation-api:+'
+            // Validation
+            'javax.validation:validation-api:+',
 
-    testCompile 'org.projectlombok:lombok:+'
-    testCompile "com.h2database:h2:+"
+            // jOOQ
+            'org.jooq:jooq:+',
+            'org.jooq:jooq-meta:+',
+            'org.jooq:jooq-codegen:+'
+
+    testCompile 'com.h2database:h2:+'
 }

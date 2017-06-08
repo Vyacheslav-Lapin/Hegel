@@ -20,7 +20,7 @@ class ReflectUtilsTest {
 
     @Test
     void baseProxyUsage() throws Exception {
-        TestFuncInt realObj = name -> String.format("Hello, %s!", name);
+        TestFuncInt realObj = getTestFuncInt();
         TestFuncInt proxyObj = (TestFuncInt) Proxy.newProxyInstance(
                 TestFuncInt.class.getClassLoader(),
                 new java.lang.Class<?>[]{TestFuncInt.class},
@@ -32,9 +32,9 @@ class ReflectUtilsTest {
                             case "hashCode":
                                 return System.identityHashCode(realObj);
                             case "toString":
-                                return proxy.getClass().getName() + "@" +
-                                        Integer.toHexString(System.identityHashCode(proxy)) +
-                                        ", with InvocationHandler";
+                                return String.format("%s@%x, with InvocationHandler",
+                                        proxy.getClass().getName(),
+                                        System.identityHashCode(proxy));
                             default:
                                 throw new IllegalStateException(String.valueOf(method));
                         }
@@ -49,9 +49,13 @@ class ReflectUtilsTest {
         assertNotEquals(proxyObj, null);
     }
 
+    private TestFuncInt getTestFuncInt() {
+        return name -> String.format("Hello, %s!", name);
+    }
+
     @Test
     void getProxyMakerFor() throws Exception {
-        TestFuncInt realObj = name -> String.format("Hello %s!", name);
+        TestFuncInt realObj = getTestFuncInt();
         TestFuncInt proxyObj = InvocationHandler.getProxyMakerFor(TestFuncInt.class).apply(
                 (proxy, method, chain, args) ->
                         method.getName().equals("hello") ?

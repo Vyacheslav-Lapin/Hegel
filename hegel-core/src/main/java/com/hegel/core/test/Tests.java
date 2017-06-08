@@ -1,17 +1,15 @@
 package com.hegel.core.test;
 
+import lombok.SneakyThrows;
+
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 public interface Tests {
 
-    // Символ переноса строки для данной операционной системы
     String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    /**
-     * @return то, что во время её выполнения попало в поток вывода System.out
-     */
+    @SneakyThrows
     static String fromSystemOutPrint(Runnable runnable) {
 
         PrintStream realOut = System.out;
@@ -24,8 +22,6 @@ public interface Tests {
 
             return new String(out.toByteArray());
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } finally {
             System.setOut(realOut);
         }

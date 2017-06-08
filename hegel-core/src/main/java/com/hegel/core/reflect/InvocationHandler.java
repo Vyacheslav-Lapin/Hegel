@@ -20,9 +20,11 @@ public interface InvocationHandler<T> extends java.lang.reflect.InvocationHandle
                 case "hashCode":
                     return System.identityHashCode(proxy);
                 case "toString":
-                    return proxy.getClass().getName() + "@" +
-                            Integer.toHexString(System.identityHashCode(proxy)) +
-                            ", with InvocationHandler " + this;
+                    return String.format(
+                            "%s@%x, with InvocationHandler %s",
+                            proxy.getClass().getName(),
+                            System.identityHashCode(proxy),
+                            this);
                 default:
                     throw new IllegalStateException(String.valueOf(method));
             }

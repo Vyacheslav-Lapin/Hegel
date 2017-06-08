@@ -11,7 +11,7 @@ public interface LongField<C> extends Field<C> {
 
     default long getValue(C object) {
         try {
-            return toSrc().getInt(object);
+            return get().getInt(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

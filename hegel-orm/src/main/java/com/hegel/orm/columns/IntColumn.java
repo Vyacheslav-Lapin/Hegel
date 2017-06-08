@@ -6,6 +6,6 @@ import com.hegel.reflect.fields.Field;
 public interface IntColumn<C> extends Column<C> {
 
     static <C> Column<C> wrap(Field<C> cField) {
-        return cField::toSrc;
+        return cField::get;
     }
 }

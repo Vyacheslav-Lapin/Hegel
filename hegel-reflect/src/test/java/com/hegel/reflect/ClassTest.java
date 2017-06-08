@@ -20,8 +20,8 @@ class ClassTest {
 
     @Test
     void toSrcTest() {
-        assertEquals(getClass(), Class.wrap(getClass()).toSrc());
-        assertEquals(TestClass.class, Class.wrap(TestClass.class).toSrc());
+        assertEquals(getClass(), Class.wrap(getClass()).get());
+        assertEquals(TestClass.class, Class.wrap(TestClass.class).get());
     }
 
     @Test
@@ -37,9 +37,9 @@ class ClassTest {
 
         // private String string;
         ObjectField<String, TestClass> stringField = (ObjectField<String, TestClass>) aClass.getField("string").get();
-        assertEquals(stringField.toSrc(), Field.wrap("string", aClass).get().toSrc());
+        assertEquals(stringField.get(), Field.wrap("string", aClass).get().get());
         assertTrue(stringField.isPrivate());
-        assertEquals(String.class, stringField.toSrc().getType());
+        assertEquals(String.class, stringField.get().getType());
         assertFalse(stringField.isFinal());
         assertFalse(stringField.isStatic());
         assertFalse(stringField.isTransient());
@@ -51,8 +51,8 @@ class ClassTest {
         assertTrue(intField.isVolatile());
         assertTrue(intField.isPackagePrivate());
         assertTrue(intField.isPrimitive());
-        assertEquals(int.class, intField.toSrc().getType());
-        assertNotEquals(Integer.class, intField.toSrc().getType());
+        assertEquals(int.class, intField.get().getType());
+        assertNotEquals(Integer.class, intField.get().getType());
         assertTrue(5 == intField.getValue(testObj));
 
 //        // public static double PI = Math.PI;
@@ -62,8 +62,8 @@ class ClassTest {
         assertTrue(piXField.isPrimitive());
         assertTrue(piXField.isStatic());
         assertTrue(piXField.isFinal());
-        assertEquals(double.class, piXField.toSrc().getType());
-        assertNotEquals(Double.class, piXField.toSrc().getType());
+        assertEquals(double.class, piXField.get().getType());
+        assertNotEquals(Double.class, piXField.get().getType());
         assertTrue(Math.PI == piXField.getValue());
     }
 }

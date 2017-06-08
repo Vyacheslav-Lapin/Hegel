@@ -19,17 +19,18 @@ public interface Executable<T, C, E extends java.lang.reflect.Executable> extend
     }
 
     default Stream<Parameter<?, Executable<T, C, E>>> parameters() {
-        return Stream.of(toSrc().getParameters()).map(Parameter::wrap);
+        return Stream.of(get().getParameters())
+                .map(Parameter::wrap);
     }
 
     default Stream<Class<?>> paramTypes() {
-        return Arrays.stream(toSrc().getParameterTypes()).map(Class::wrap);
+        return Arrays.stream(get().getParameterTypes()).map(Class::wrap);
     }
 
     // TODO: 3/22/2016 Move this method to Util-interface com.hegel.core.Streams
     default boolean paramTypesCheck(Object[] params) {
         return Arrays.equals(
-                Arrays.stream(toSrc().getParameterTypes())
+                Arrays.stream(get().getParameterTypes())
                         .map(BaseType::from)
                         .toArray(java.lang.Class[]::new),
                 Arrays.stream(params)
@@ -39,6 +40,6 @@ public interface Executable<T, C, E extends java.lang.reflect.Executable> extend
     }
 
     default int getParameterCount() {
-        return toSrc().getParameterCount();
+        return get().getParameterCount();
     }
 }

@@ -3,9 +3,10 @@ package com.hegel.core.wrappers;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface IterableWrapper<T> extends Iterable<T>, Wrapper<Iterable<T>> {
+public interface IterableWrapper<T> extends Iterable<T>, Supplier<Iterable<T>> {
 
     static <T> IterableWrapper<T> wrap(Iterable<T> iterable) {
         return () -> iterable;
@@ -13,16 +14,16 @@ public interface IterableWrapper<T> extends Iterable<T>, Wrapper<Iterable<T>> {
 
     @Override
     default Iterator<T> iterator() {
-        return toSrc().iterator();
+        return get().iterator();
     }
 
     @Override
     default Spliterator<T> spliterator() {
-        return toSrc().spliterator();
+        return get().spliterator();
     }
 
     @Override
     default void forEach(Consumer<? super T> action) {
-        toSrc().forEach(action);
+        get().forEach(action);
     }
 }

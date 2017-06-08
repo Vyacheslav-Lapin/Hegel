@@ -1,15 +1,14 @@
 package com.hegel.reflect;
 
-import com.hegel.core.wrappers.Wrapper;
-
 import java.lang.reflect.Modifier;
+import java.util.function.Supplier;
 
 /**
  * @param <T> Type of field or of Method returned value. Equals to C for Constructor
  * @param <C> Class owns the Field, Method or Constructor
  * @param <M> Source class
  */
-public interface Member<T, C, M extends java.lang.reflect.Member> extends Wrapper<M> {
+public interface Member<T, C, M extends java.lang.reflect.Member> extends Supplier<M> {
 
     default boolean isPrimitive() {
         return false;
@@ -19,11 +18,11 @@ public interface Member<T, C, M extends java.lang.reflect.Member> extends Wrappe
 
     @SuppressWarnings("unchecked")
     default Class<C> getOwnerClass() {
-        return Class.wrap((java.lang.Class<C>) toSrc().getDeclaringClass());
+        return Class.wrap((java.lang.Class<C>) get().getDeclaringClass());
     }
 
     default int getModifiers() {
-        return toSrc().getModifiers();
+        return get().getModifiers();
     }
 
     default boolean isStatic() {
@@ -57,6 +56,6 @@ public interface Member<T, C, M extends java.lang.reflect.Member> extends Wrappe
     }
 
     default String getName() {
-        return toSrc().getName();
+        return get().getName();
     }
 }

@@ -1,5 +1,7 @@
 package com.hegel.reflect;
 
+import lombok.SneakyThrows;
+
 import java.lang.reflect.InvocationTargetException;
 
 @FunctionalInterface
@@ -16,13 +18,10 @@ public interface Constructor<C> extends Executable<C, C, java.lang.reflect.Const
     }
 
     @Override
+    @SneakyThrows
     default C execute(Object... params) {
         assert paramTypesCheck(params);
-        try {
-            return toSrc().newInstance(params);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        return get().newInstance(params);
     }
 
     @Override

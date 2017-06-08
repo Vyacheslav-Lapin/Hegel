@@ -11,7 +11,7 @@ public interface ObjectField<F, C> extends Field<C> {
     @SuppressWarnings("unchecked")
     default F getValue(C object) {
         try {
-            return (F) toSrc().get(object);
+            return (F) get().get(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

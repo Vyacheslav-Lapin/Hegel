@@ -1,3 +1,5 @@
+.gitignore
+
 # IntelliJ project files #
 .idea
 classes
@@ -11,8 +13,13 @@ build
 .settings
 
 # Gradle #
-target
 gradlew*
+gradle.properties
+.gradle
+gradle
+
+# Maven #
+target
 
 # Package Files #
 *.jar

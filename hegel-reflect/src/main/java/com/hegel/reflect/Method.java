@@ -8,7 +8,7 @@ public interface Method<T, C> extends Executable<T, C, java.lang.reflect.Method>
     @SuppressWarnings("unchecked")
     @Override
     default Class<T> getType() {
-        return Class.wrap((java.lang.Class<T>) toSrc().getReturnType());
+        return Class.wrap((java.lang.Class<T>) get().getReturnType());
     }
 
     @SuppressWarnings("unchecked")
@@ -18,13 +18,13 @@ public interface Method<T, C> extends Executable<T, C, java.lang.reflect.Method>
 
     @Override
     default boolean isPrimitive() {
-        return toSrc().getReturnType().isPrimitive();
+        return get().getReturnType().isPrimitive();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     default T execute(C thisObject, Object... params) throws InvocationTargetException, IllegalAccessException {
         assert paramTypesCheck(params);
-        return (T) toSrc().invoke(thisObject, params);
+        return (T) get().invoke(thisObject, params);
     }
 }

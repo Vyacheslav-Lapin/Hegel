@@ -1,18 +1,20 @@
 package com.hegel.core.functions;
 
 import com.hegel.core.Either;
-import com.hegel.core.Wrapper;
+import javaslang.control.Option;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E>> {
+public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, E>>/*, javaslang.control.Try */ {
 
     static <T, E extends Throwable> Exceptional<T, E> wrap(Either<T, E> either) {
         return () -> either;
     }
 
+    @SuppressWarnings("unused")
     default <T1> Exceptional<T1, E> mapValue(Function<T, T1> valueTransformer) {
         return wrap(get().mapLeft(valueTransformer));
     }
@@ -51,6 +53,10 @@ public interface Exceptional<T, E extends Throwable> extends Wrapper<Either<T, E
     static <T, E extends Throwable> Exceptional<T, E> withException(E exception) {
         Either<T, E> right = Either.right(exception);
         return () -> right;
+    }
+
+    default Option<T> toOption() {
+        return Option.of(get().left());
     }
 
     default Optional<T> toOptional() {

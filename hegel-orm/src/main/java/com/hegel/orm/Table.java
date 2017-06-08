@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public interface Table<C> extends Class<C> {
 
     default String selectQuery() {
-        return "SELECT " + columns().map(Column::toSqlName).collect(Collectors.joining(", ")) + " FROM " + toSrc().getSimpleName();
+        return "SELECT " + columns().map(Column::toSqlName).collect(Collectors.joining(", ")) + " FROM " + get().getSimpleName();
     }
 
     default void toLiquibaseXML(Writer writer) {
@@ -23,7 +23,7 @@ public interface Table<C> extends Class<C> {
             xmlStreamWriter.writeStartDocument();
 
             xmlStreamWriter.writeStartElement("createTable");
-            xmlStreamWriter.writeAttribute("tableName", toSrc().getSimpleName());
+            xmlStreamWriter.writeAttribute("tableName", get().getSimpleName());
             xmlStreamWriter.writeDefaultNamespace("http://www.liquibase.org/xml/ns/dbchangelog");
             xmlStreamWriter.writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
                     "http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd");
@@ -40,7 +40,7 @@ public interface Table<C> extends Class<C> {
     }
 
     default String sqlCreateQuery() {
-        return "CREATE TABLE " + toSrc().getSimpleName() + " (" +
+        return "CREATE TABLE " + get().getSimpleName() + " (" +
                 columns().map(Column::toCreateQuery).collect(Collectors.joining(", "));
     }
 
@@ -49,7 +49,7 @@ public interface Table<C> extends Class<C> {
     }
 
     static <C> Table<C> wrap(Class<C> cClass) {
-        return wrap(cClass.toSrc());
+        return wrap(cClass.get());
     }
 
     @SuppressWarnings("unchecked")

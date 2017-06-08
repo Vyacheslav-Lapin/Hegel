@@ -1,11 +1,11 @@
 package com.hegel.core;
 
-import com.hegel.core.wrappers.Wrapper;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface Test { // TODO: 3/27/2016 Replace with https://github.com/npathai/hamcrest-optional or something like that
 
@@ -18,11 +18,12 @@ public interface Test { // TODO: 3/27/2016 Replace with https://github.com/npath
         return tOptional.orElseThrow(() -> new AssertionError(message));
     }
 
-    static <T> Matcher<Wrapper<T>> isWrapperOf(T wrappedObject) {
-        return new TypeSafeMatcher<Wrapper<T>>() {
+    @SuppressWarnings("unused")
+    static <T> Matcher<Supplier<T>> isWrapperOf(T wrappedObject) {
+        return new TypeSafeMatcher<Supplier<T>>() {
             @Override
-            protected boolean matchesSafely(Wrapper<T> item) {
-                return item.toSrc().equals(wrappedObject);
+            protected boolean matchesSafely(Supplier<T> item) {
+                return item.get().equals(wrappedObject);
             }
 
             @Override
@@ -32,6 +33,7 @@ public interface Test { // TODO: 3/27/2016 Replace with https://github.com/npath
         };
     }
 
+    @SuppressWarnings("unused")
     static <T> Matcher<Optional<T>> contains(T expected) {
         return new TypeSafeMatcher<Optional<T>>() {
 

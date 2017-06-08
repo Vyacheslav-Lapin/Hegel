@@ -1,32 +1,20 @@
 package com.hegel.reflect.fields;
 
-import com.hegel.core.wrappers.Wrapper;
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
+import javaslang.control.Try;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface Field<C> extends Wrapper<java.lang.reflect.Field> {
+public interface Field<C> extends Supplier<java.lang.reflect.Field> {
 
     List<java.lang.Class<?>> INT_CLASSES = Arrays.asList(int.class, short.class, char.class, byte.class);
     List<java.lang.Class<?>> DECIMAL_CLASSES = Arrays.asList(double.class, float.class);
-
-    default BaseType getType() {
-        return BaseType.from(Class.wrap(toSrc().getType()));
-    }
-
-    default Class<?> getOwnerClass() {
-        return Class.wrap(toSrc().getDeclaringClass());
-    }
-
-    default int getModifiers() {
-        return toSrc().getModifiers();
-    }
 
     @SuppressWarnings("unchecked")
     static <C, F extends Field<C>> F wrap(java.lang.reflect.Field field) {
@@ -38,13 +26,25 @@ public interface Field<C> extends Wrapper<java.lang.reflect.Field> {
                                         ObjectField.wrap(field));
     }
 
-    static <C> Optional<Field<C>> wrap(String name, Class<C> declaringClass) {
+    static <C> Try<Field<C>> wrap(String name, Class<C> declaringClass) {
         return declaringClass.getField(name);
+    }
+
+    default BaseType getType() {
+        return BaseType.from(Class.wrap(get().getType()));
+    }
+
+    default Class<?> getOwnerClass() {
+        return Class.wrap(get().getDeclaringClass());
+    }
+
+    default int getModifiers() {
+        return get().getModifiers();
     }
 
     @SneakyThrows
     default String toString(C object) {
-        return toSrc().get(object).toString();
+        return get().get(object).toString();
     }
 
     default boolean isStatic() {
@@ -60,7 +60,7 @@ public interface Field<C> extends Wrapper<java.lang.reflect.Field> {
     }
 
     default boolean isPrimitive() {
-        return toSrc().getType().isPrimitive();
+        return get().getType().isPrimitive();
     }
 
     default boolean isPrivate() {

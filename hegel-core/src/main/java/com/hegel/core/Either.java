@@ -5,7 +5,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public final class Either<L, R> {
+@SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
+public final class Either<L, R> { //extends javaslang.control.Either<L, R>
 
     private final L LEFT;
     private final R RIGHT;
@@ -35,12 +36,14 @@ public final class Either<L, R> {
     }
 
     public Either<L, R> peekLeft(Consumer<L> leftConsumer) {
-        if (isLeft()) leftConsumer.accept(LEFT);
+        if (isLeft())
+            leftConsumer.accept(LEFT);
         return this;
     }
 
     public Either<L, R> peekRight(Consumer<R> rightConsumer) {
-        if (isRight()) rightConsumer.accept(RIGHT);
+        if (isRight())
+            rightConsumer.accept(RIGHT);
         return this;
     }
 
@@ -54,12 +57,10 @@ public final class Either<L, R> {
     }
 
     public L left() {
-//        requireNonNull(LEFT);
         return LEFT;
     }
 
     public R right() {
-//        requireNonNull(RIGHT);
         return RIGHT;
     }
 
@@ -86,7 +87,7 @@ public final class Either<L, R> {
             rightConsumer.accept(RIGHT);
     }
 
-    public com.hegel.core.Either<R, L> swap() {
+    public Either<R, L> swap() {
         return new Either<>(RIGHT, LEFT);
     }
 

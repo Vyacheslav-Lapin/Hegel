@@ -11,7 +11,7 @@ public interface DoubleField<C> extends Field<C> {
 
     default double getValue(C object) {
         try {
-            return toSrc().getDouble(object);
+            return get().getDouble(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

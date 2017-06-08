@@ -20,7 +20,7 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface ConnectionPool extends JdbcDao<ConnectionPool> {
 
-    String DEFAULT_DB_PROPERTIES_FILE_PATH = "db.properties";
+    String DEFAULT_DB_PROPERTIES_FILE_NAME = "db.properties";
     String SQL_FILE_NAME_SUFFIX = ".sql";
     String JDBC_DRIVER_CLASS_KEY = "driver";
     String JDBC_URL_KEY = "url";
@@ -32,7 +32,7 @@ public interface ConnectionPool extends JdbcDao<ConnectionPool> {
     }
 
     static ConnectionPool create(final String rootFilePath) {
-        val props = PropertyMap.fromFile(rootFilePath + DEFAULT_DB_PROPERTIES_FILE_PATH);
+        val props = PropertyMap.fromFile(rootFilePath + DEFAULT_DB_PROPERTIES_FILE_NAME);
         Reflect.loadClass(props.remove(JDBC_DRIVER_CLASS_KEY));
         return ConnectionPool.create(
                 Integer.parseInt(props.remove(JDBC_CONNECTION_POOL_SIZE_KEY)),
@@ -44,7 +44,7 @@ public interface ConnectionPool extends JdbcDao<ConnectionPool> {
 //    @SuppressWarnings("unused")
 //    @SneakyThrows
 //    static ConnectionPool create(String dbFilesFolderPath) {
-//        try (InputStream inputStream = Files.newInputStream(Paths.get(dbFilesFolderPath + DEFAULT_DB_PROPERTIES_FILE_PATH))) {
+//        try (InputStream inputStream = Files.newInputStream(Paths.get(dbFilesFolderPath + DEFAULT_DB_PROPERTIES_FILE_NAME))) {
 //            Properties properties = new Properties();
 //            properties.load(inputStream);
 //            return create(properties, dbFilesFolderPath);

@@ -9,7 +9,10 @@ subprojects {
     targetCompatibility = 1.8
 
     repositories {
+        mavenLocal()
         mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
     }
 
     publishing {
@@ -27,9 +30,11 @@ subprojects {
     test.testLogging.showStandardStreams = true
 
     dependencies {
-        compile 'ch.qos.logback:logback-classic:+'
+        compile 'ch.qos.logback:logback-classic:+',
+                'io.javaslang:javaslang:+'
 
-        compileOnly 'org.projectlombok:lombok:+'
+        compileOnly 'org.projectlombok:lombok:+',
+                'edu.washington.cs.types.checker:checker-framework:+'
 
         testCompile 'org.projectlombok:lombok:+',
                 'org.junit.jupiter:junit-jupiter-api:+',
@@ -38,5 +43,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '3.4'
 }

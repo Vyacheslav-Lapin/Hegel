@@ -19,13 +19,22 @@ import java.util.stream.Stream;
 import static com.hegel.core.functions.ExceptionalConsumer.toUncheckedConsumer;
 
 @FunctionalInterface
-public interface JdbcDao<J extends JdbcDao<J>> extends Supplier<Connection> {
+public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
 
     default <T> ExceptionalSupplier<T, SQLException> connectionMapper(
             ExceptionalFunction<Connection, T, SQLException> connectionMapper) {
         return () -> {
-            try (Connection connection = get()) {
+            try (final Connection connection = get()) {
                 return connectionMapper.get(connection);
+            }
+        };
+    }
+
+    default ExceptionalRunnable<SQLException> connectionPeeker(
+            ExceptionalConsumer<Connection, SQLException> connectionMapper) {
+        return () -> {
+            try (final Connection connection = get()) {
+                connectionMapper.call(connection);
             }
         };
     }
@@ -33,24 +42,33 @@ public interface JdbcDao<J extends JdbcDao<J>> extends Supplier<Connection> {
     default <T> ExceptionalSupplier<T, SQLException> statementMapper(
             ExceptionalFunction<Statement, T, SQLException> statementMapper) {
         return connectionMapper(connection -> {
-            try (Statement statement = connection.createStatement()) {
+            try (final Statement statement = connection.createStatement()) {
                 return statementMapper.get(statement);
             }
         });
     }
 
-    default J executeScripts(Path... sqlFilePaths) {
-        statementMapper(statement -> {
+    default ExceptionalRunnable<SQLException> statementPeeker(
+            ExceptionalConsumer<Statement, SQLException> statementMapper) {
+        return connectionPeeker(connection -> {
+            try (final Statement statement = connection.createStatement()) {
+                statementMapper.call(statement);
+            }
+        });
+    }
+
+    default D executeScripts(Path... sqlFilePaths) {
+        statementPeeker(statement -> {
             Arrays.stream(sqlFilePaths)
                     .map(ExceptionalFunction.toUncheckedFunction(Files::readAllBytes))
                     .map(String::new)
                     .map(s -> s.split(";"))
                     .flatMap(Arrays::stream)
                     .forEach(toUncheckedConsumer(statement::addBatch));
-            return statement.executeBatch();
-        }).executeOrThrowUnchecked();
+            statement.executeBatch();
+        }).run();
         //noinspection unchecked
-        return (J) this;
+        return (D) this;
     }
 
     default <T> ExceptionalSupplier<T, SQLException> resultSetMapper(
@@ -59,6 +77,16 @@ public interface JdbcDao<J extends JdbcDao<J>> extends Supplier<Connection> {
         return statementMapper(statement -> {
             try (final ResultSet rs = statement.executeQuery(sql)) {
                 return resultSetMapper.get(rs);
+            }
+        });
+    }
+
+    default ExceptionalRunnable<SQLException> resultSetPeeker(
+            String sql,
+            ExceptionalConsumer<ResultSet, SQLException> resultSetMapper) {
+        return statementPeeker(statement -> {
+            try (final ResultSet rs = statement.executeQuery(sql)) {
+                resultSetMapper.call(rs);
             }
         });
     }
@@ -74,21 +102,27 @@ public interface JdbcDao<J extends JdbcDao<J>> extends Supplier<Connection> {
                 resultSet -> resultSet.next() ? Optional.of(rowMapper.get(resultSet)) : Optional.empty());
     }
 
-    default ExceptionalRunnable<SQLException> rowsMapper(
+    default ExceptionalRunnable<SQLException> rowPeeker(String sql, ExceptionalConsumer<ResultSet, SQLException> rowPeeker) {
+        return resultSetPeeker(sql, resultSet -> {
+            if (resultSet.next())
+                rowPeeker.call(resultSet);
+        });
+    }
+
+    default ExceptionalRunnable<SQLException> rowsPeeker(
             String sql,
-            ExceptionalConsumer<ResultSet, SQLException> rowMapper) {
-        return resultSetMapper(sql, resultSet -> {
+            ExceptionalConsumer<ResultSet, SQLException> rowPeeker) {
+        return resultSetPeeker(sql, resultSet -> {
             while (resultSet.next())
-                rowMapper.call(resultSet);
-            return 0;
-        })::executeOrThrowUnchecked;
+                rowPeeker.call(resultSet);
+        });
     }
 
     default <T> ExceptionalRunnable<SQLException> rowsMapReducer(
             String sql,
             ExceptionalFunction<ResultSet, T, SQLException> rowMapper,
             Consumer<T> reducer) {
-        return rowsMapper(sql, resultSet -> reducer.accept(rowMapper.get(resultSet)));
+        return rowsPeeker(sql, resultSet -> reducer.accept(rowMapper.get(resultSet)));
     }
 
     default <T, C extends Collection<T>> Exceptional<C, SQLException> collect(

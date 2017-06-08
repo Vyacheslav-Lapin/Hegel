@@ -14,6 +14,8 @@ import static com.hegel.core.functions.ExceptionalSupplier.avoid;
 
 public class Pool<T extends AutoCloseable> implements Supplier<T>, AutoCloseable {
 
+    private static final String CLOSE = "close";
+
     private Function<InvocationHandler<T>, T> proxyMaker;
     private BlockingQueue<T> freeObjectsQueue;
     private volatile boolean isClosing;
@@ -31,14 +33,15 @@ public class Pool<T extends AutoCloseable> implements Supplier<T>, AutoCloseable
     private T proxy(T t) {
         return proxyMaker.apply(
                 (proxy, method, chain, args) ->
-                        method.getName().equals("close") && !isClosing ?
+                        method.getName().equals(CLOSE) && !isClosing ?
                                 avoid(freeObjectsQueue.offer(proxy)):
                                 chain.apply(t));
     }
 
     @Override
     public T get() {
-        if (isClosing) throw new RuntimeException("Trying to get object from closed pool!");
+        if (isClosing)
+            throw new RuntimeException("Trying to get object from closed pool!");
         return ExceptionalSupplier.getOrThrowUnchecked(freeObjectsQueue::take);
     }
 

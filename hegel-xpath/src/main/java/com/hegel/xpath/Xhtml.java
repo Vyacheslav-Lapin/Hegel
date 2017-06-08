@@ -30,7 +30,7 @@ public class Xhtml extends Xml {
         this(new ByteArrayInputStream(html.getBytes(encoding)));
     }
 
-    protected Xhtml(String html){
+    protected Xhtml(String html) {
         this(html, UTF_8);
     }
 
@@ -72,15 +72,15 @@ public class Xhtml extends Xml {
     }
 
     public static Xhtml from(URL url) {
-            return new Xhtml(url);
+        return new Xhtml(url);
     }
 
 
-    static private HtmlCleaner HTML_CLEANER = new HtmlCleaner();
-    static private CleanerProperties PROPS = HTML_CLEANER.getProperties();
-    static private Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
+    private static HtmlCleaner HTML_CLEANER = new HtmlCleaner();
+    private static CleanerProperties PROPS = HTML_CLEANER.getProperties();
+    private static Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
 
-    static protected String getCleanDocument(InputStream htmlInputStream) {
+    protected static String getCleanDocument(InputStream htmlInputStream) {
         try (InputStream inputStream = htmlInputStream) {
             // Comment DOCTYPE-section, because Saxon (and Altova XMLSpy too) can`t work with it...
             return PATTERN.matcher(
@@ -92,7 +92,7 @@ public class Xhtml extends Xml {
         }
     }
 
-    static protected InputStream toXhtmlInputStream(InputStream htmlInputStream) {
+    protected static InputStream toXhtmlInputStream(InputStream htmlInputStream) {
         return new ByteArrayInputStream(getCleanDocument(htmlInputStream).getBytes(UTF_8));
     }
 }

@@ -1,35 +1,44 @@
 package com.hegel.core;
 
 import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @FunctionalInterface
-public interface Lambderator<E> {
-    boolean tryAdvance(Consumer<? super E> action);
+public interface Lambderator<E> extends Spliterator<E> {
 
-    default Spliterator toSpliterator() {
-        Predicate<Consumer<? super E>> tryAdvance = this::tryAdvance;
-        return new Spliterator() {
-            @Override
-            public boolean tryAdvance(Consumer action) {
-                return tryAdvance.test(action);
-            }
+    static <E> Lambderator<E> from(Lambderator<E> lambderator) {
+        return lambderator;
+    }
 
-            @Override
-            public Spliterator trySplit() {
-                return null;
-            }
+    @Override
+    default Spliterator<E> trySplit() {
+        return null;
+    }
 
-            @Override
-            public long estimateSize() {
-                return 0;
-            }
+    @Override
+    default long estimateSize() {
+        return 0;
+    }
 
-            @Override
-            public int characteristics() {
-                return 0;
-            }
-        };
+    @Override
+    default int characteristics() {
+        return 0;
+    }
+
+    default Stream<E> stream(boolean parallel) {
+        return StreamSupport.stream(this, parallel);
+    }
+
+    default Stream<E> stream() {
+        return stream(false);
+    }
+
+    static <E> Stream<E> stream(Lambderator<E> lambderator, boolean parallel) {
+        return lambderator.stream(parallel);
+    }
+
+    static <E> Stream<E> stream(Lambderator<E> lambderator) {
+        return lambderator.stream();
     }
 }

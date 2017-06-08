@@ -32,6 +32,7 @@ public class XPathQueryExecutor {
         this.xPathCompiler = xPathCompiler;
     }
 
+    @SuppressWarnings("unused")
     public Stream<String> stream(InputStream inputStream, String xPathExpression) {
         return stream(toDocument(inputStream), toSelector(xPathExpression));
     }
@@ -40,6 +41,7 @@ public class XPathQueryExecutor {
         return stream(toDocument(xml), toSelector(xPathExpression));
     }
 
+    @SuppressWarnings("unused")
     public Stream<String> stream(Path path, String xPathExpression) {
         return stream(toDocument(path), toSelector(xPathExpression));
     }

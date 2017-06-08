@@ -11,7 +11,7 @@ public interface IntField<C> extends Field<C> {
 
     default int getValue(C object) {
         try {
-            return toSrc().getInt(object);
+            return get().getInt(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
