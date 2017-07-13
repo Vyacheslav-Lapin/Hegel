@@ -11,9 +11,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author Vyacheslav_Lapin
- */
 class SimplePropertyMapTest {
 
     private static final String RESOURCES_DIR_PATH = "src/test/resources/";

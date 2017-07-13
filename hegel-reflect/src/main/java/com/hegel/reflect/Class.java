@@ -2,7 +2,7 @@ package com.hegel.reflect;
 
 import com.hegel.reflect.fields.Field;
 import com.hegel.reflect.methods.Method;
-import javaslang.control.Try;
+import io.vavr.control.Try;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -29,19 +29,20 @@ public interface Class<C> extends Supplier<java.lang.Class<C>> {
     }
 
     default Stream<Field<C>> fields() {
-        return Stream.of(get().getDeclaredFields()).map(Field::wrap);
+        return Arrays.stream(get().getDeclaredFields())
+                .map(Field::<C, Field<C>>wrap);
     }
 
     default Stream<Field<C>> dynamicFields() {
         return Stream.of(get().getDeclaredFields())
                 .filter(field -> !Modifier.isStatic(field.getModifiers()))
-                .map(Field::wrap);
+                .map(Field::<C, Field<C>>wrap);
     }
 
     default Stream<Field<C>> staticFields() {
         return Stream.of(get().getDeclaredFields())
                 .filter(field -> Modifier.isStatic(field.getModifiers()))
-                .map(Field::wrap);
+                .map(Field::<C, Field<C>>wrap);
     }
 
     default boolean isInherited(java.lang.Class<?> aClass) {
@@ -87,6 +88,7 @@ public interface Class<C> extends Supplier<java.lang.Class<C>> {
 
     default <M extends Method<C>> Optional<M> getMethod(String name, java.lang.Class<?>... params) {
         try {
+            //noinspection unchecked
             return Optional.of(Method.wrap(get().getMethod(name, params)));
         } catch (NoSuchMethodException e) {
             return Optional.empty();

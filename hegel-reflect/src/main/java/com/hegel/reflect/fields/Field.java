@@ -2,7 +2,7 @@ package com.hegel.reflect.fields;
 
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
-import javaslang.control.Try;
+import io.vavr.control.Try;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Modifier;

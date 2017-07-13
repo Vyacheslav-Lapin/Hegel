@@ -1,13 +1,17 @@
 package com.hegel.core;
 
+import lombok.SneakyThrows;
+import lombok.val;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface Test { // TODO: 3/27/2016 Replace with https://github.com/npathai/hamcrest-optional or something like that
+public interface Test {
 
     static <T> T get(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<T> tOptional) {
         return get(tOptional, "");
@@ -16,6 +20,24 @@ public interface Test { // TODO: 3/27/2016 Replace with https://github.com/npath
     static <T> T get(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<T> tOptional,
                      String message) {
         return tOptional.orElseThrow(() -> new AssertionError(message));
+    }
+
+    @SneakyThrows
+    static String fromSystemOut(Runnable runnable) {
+
+        PrintStream realOut = System.out;
+
+        try (val out = new ByteArrayOutputStream();
+             val printStream = new PrintStream(out)) {
+
+            System.setOut(printStream);
+            runnable.run();
+
+            return new String(out.toByteArray()).intern();
+
+        } finally {
+            System.setOut(realOut);
+        }
     }
 
     @SuppressWarnings("unused")

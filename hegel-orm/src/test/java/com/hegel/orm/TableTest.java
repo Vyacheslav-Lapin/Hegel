@@ -58,7 +58,8 @@ class TableTest {
                         "    login         VARCHAR(20)," +
                         "    password      VARCHAR(20)," +
                         "    is_txt_enable BOOL," +
-                        "    PRIMARY KEY (id)",
+                        "    PRIMARY KEY (id)" +
+                        ")",
                 Table.wrap(User.class).sqlCreateQuery());
     }
 

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public interface PropertyMap extends Map<String, String> {
 
     static PropertyMap from(Properties properties) {
-        return properties.stringPropertyNames().parallelStream()
+        return properties.stringPropertyNames().stream()
                 .reduce(new SimplePropertyMap(),
                         (props, s) -> {
                             props.put(s, properties.getProperty(s));

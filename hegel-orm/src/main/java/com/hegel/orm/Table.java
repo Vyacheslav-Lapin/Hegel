@@ -2,46 +2,54 @@ package com.hegel.orm;
 
 import com.hegel.orm.columns.Column;
 import com.hegel.reflect.Class;
+import lombok.SneakyThrows;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.Writer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 public interface Table<C> extends Class<C> {
 
     default String selectQuery() {
-        return "SELECT " + columns().map(Column::toSqlName).collect(Collectors.joining(", ")) + " FROM " + get().getSimpleName();
+        // TODO: 06/07/2017 Realize behavior of classes linkage
+//        if (dynamicFields()
+//                .map(Field::getType)
+//                .filter(baseType -> baseType == BaseType.REFERENCE)
+//                .filter(baseType -> baseType))
+        return String.format("SELECT %s FROM %s",
+                columns().map(Column::toSqlName).collect(joining(", ")),
+                get().getSimpleName());
     }
 
+    @SneakyThrows
     default void toLiquibaseXML(Writer writer) {
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
-        try {
-            XMLStreamWriter xmlStreamWriter = factory.createXMLStreamWriter(writer);
-            xmlStreamWriter.writeStartDocument();
+        XMLStreamWriter xmlStreamWriter = factory.createXMLStreamWriter(writer);
+        xmlStreamWriter.writeStartDocument();
 
-            xmlStreamWriter.writeStartElement("createTable");
-            xmlStreamWriter.writeAttribute("tableName", get().getSimpleName());
-            xmlStreamWriter.writeDefaultNamespace("http://www.liquibase.org/xml/ns/dbchangelog");
-            xmlStreamWriter.writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
-                    "http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd");
+        xmlStreamWriter.writeStartElement("createTable");
+        xmlStreamWriter.writeAttribute("tableName", get().getSimpleName());
+        xmlStreamWriter.writeDefaultNamespace("http://www.liquibase.org/xml/ns/dbchangelog");
+        xmlStreamWriter.writeAttribute("xsi", "http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
+                "http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd");
 
-            columns().forEach(cSqlColumn -> cSqlColumn.writeToLiquibaseXml(xmlStreamWriter));
+        columns().forEach(cSqlColumn -> cSqlColumn.writeToLiquibaseXml(xmlStreamWriter));
 
-            xmlStreamWriter.writeEndElement();
-            xmlStreamWriter.writeEndDocument();
-            xmlStreamWriter.flush();
-            xmlStreamWriter.close();
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
+        xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.writeEndDocument();
+        xmlStreamWriter.flush();
+        xmlStreamWriter.close();
     }
 
     default String sqlCreateQuery() {
-        return "CREATE TABLE " + get().getSimpleName() + " (" +
-                columns().map(Column::toCreateQuery).collect(Collectors.joining(", "));
+        return String.format("CREATE TABLE %s (%s",
+                get().getSimpleName(),
+                columns()
+                        .map(Column::toCreateQuery)
+                        .collect(joining(", ")));
     }
 
     static <C> Table<C> wrap(java.lang.Class<C> aClass) {

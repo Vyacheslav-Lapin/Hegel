@@ -23,6 +23,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @ToString
 @Getter
+//@FieldDefaults(makeFinal = true, level = PRIVATE)
 public class Person {
 
     @NotNull
@@ -30,11 +31,11 @@ public class Person {
 
     @NotNull
     @Size(max = 60)
-    private final String firstName;
+    private String firstName;
 
     @NotNull
     @Size(max = 40)
-    private final String lastName;
+    private String lastName;
 
-    private final LocalDate birthDate;
+    private LocalDate birthDate;
 }

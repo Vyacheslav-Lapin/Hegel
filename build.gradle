@@ -3,7 +3,18 @@ subprojects {
     version '1.0-SNAPSHOT'
 
     apply plugin: 'java'
-    apply plugin: 'maven-publish'
+
+//    apply plugin: 'maven-publish'
+//    publishing {
+//        publications {
+//            mavenJava(MavenPublication) {
+//                from components.java
+//                artifact sourceJar {
+//                    classifier "sources"
+//                }
+//            }
+//        }
+//    }
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -12,36 +23,30 @@ subprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
-        maven { url 'https://jitpack.io' }
+//        maven { url 'https://jitpack.io' }
     }
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-//                artifact sourceJar {
-//                    classifier "sources"
-//                }
-            }
-        }
+    configurations {
+        testCompile.extendsFrom compileOnly
     }
 
     // this turns logging on in tests:
     test.testLogging.showStandardStreams = true
 
     dependencies {
-        compile 'ch.qos.logback:logback-classic:+',
-                'io.javaslang:javaslang:+'
+        compile 'org.apache.logging.log4j:log4j-core:+',
+//                'com.aol.simplereact:cyclops-react:+',
+                'io.vavr:vavr:+'
 
         compileOnly 'org.projectlombok:lombok:+',
                 'edu.washington.cs.types.checker:checker-framework:+'
 
-        testCompile 'org.projectlombok:lombok:+',
-                'org.junit.jupiter:junit-jupiter-api:+',
+        testCompile 'org.junit.jupiter:junit-jupiter-api:+',
                 'org.hamcrest:java-hamcrest:+'
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.4'
+    gradleVersion = '4.0.1'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

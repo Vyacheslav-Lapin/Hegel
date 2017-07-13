@@ -1,27 +1,9 @@
 .gitignore
-
-# IntelliJ project files #
 .idea
-classes
-out
-build
-*.class
-
-# Eclipse project files #
-.classpath
-.project
-.settings
-
-# Gradle #
+Hegel.iml
 gradlew*
 gradle.properties
 .gradle
 gradle
-
-# Maven #
-target
-
-# Package Files #
-*.jar
-*.war
-*.ear
+/*/out
+/*/build

@@ -1,7 +1,7 @@
 package com.hegel.core.functions;
 
 import com.hegel.core.Either;
-import javaslang.control.Option;
+import io.vavr.control.Option;
 
 import java.util.Optional;
 import java.util.function.Function;
