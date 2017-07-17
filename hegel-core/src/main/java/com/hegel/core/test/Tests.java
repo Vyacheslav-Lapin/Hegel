@@ -1,6 +1,8 @@
 package com.hegel.core.test;
 
 import lombok.SneakyThrows;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -32,5 +34,18 @@ public interface Tests {
         if (s.endsWith(LINE_SEPARATOR))
             s = s.substring(0, s.length() - LINE_SEPARATOR.length());
         return s;
+    }
+
+    static TypeSafeMatcher<Number> closeTo(double value) {
+        return new TypeSafeMatcher<Number>() {
+            @Override
+            protected boolean matchesSafely(Number item) {
+                return item.doubleValue() == value;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
     }
 }
