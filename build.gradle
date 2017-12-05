@@ -4,38 +4,20 @@ subprojects {
 
     apply plugin: 'java'
 
-//    apply plugin: 'maven-publish'
-//    publishing {
-//        publications {
-//            mavenJava(MavenPublication) {
-//                from components.java
-//                artifact sourceJar {
-//                    classifier 'sources'
-//                }
-//            }
-//        }
-//    }
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility =
+            targetCompatibility = 1.8
 
     repositories {
         mavenLocal()
         mavenCentral()
-        jcenter()
-//        maven { url 'https://jitpack.io' }
     }
 
     configurations {
         testCompile.extendsFrom compileOnly
     }
 
-    // this turns logging on in tests:
-    test.testLogging.showStandardStreams = true
-
     dependencies {
         compile 'org.apache.logging.log4j:log4j-core:+',
-//                'com.aol.simplereact:cyclops-react:+',
                 'io.vavr:vavr:+'
 
         compileOnly 'org.projectlombok:lombok:+',
@@ -46,7 +28,9 @@ subprojects {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
+// type in terminal: ./gradlew wrapper --gradle-version=4.4-rc-6
+task Wrapper(type: Wrapper) {
+    description = 'Generates gradlew[.bat] scripts'
+    gradleVersion = '4.4-rc-6'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

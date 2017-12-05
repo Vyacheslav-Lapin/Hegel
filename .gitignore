@@ -1,9 +1,5 @@
 .gitignore
 .idea
-Hegel.iml
-gradlew*
-gradle.properties
 .gradle
 gradle
-/*/out
-/*/build
+gradlew*

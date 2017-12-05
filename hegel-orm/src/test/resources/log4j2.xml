@@ -4,10 +4,21 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+        <RollingFile
+                name="FileLogger"
+                fileName="logs/Hegel.log"
+                filePattern="logs/Hegel-%d{yyyy-MM-dd}.log"
+                append="true">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <SizeBasedTriggeringPolicy size="10MB"/>
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <!--<Root level="info">-->
+        <Root level="trace">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileLogger" level="DEBUG"/>
         </Root>
     </Loggers>
 </Configuration>
