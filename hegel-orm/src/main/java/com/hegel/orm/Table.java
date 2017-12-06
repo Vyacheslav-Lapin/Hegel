@@ -13,6 +13,19 @@ import static java.util.stream.Collectors.joining;
 
 public interface Table<C> extends Class<C> {
 
+    static <C> Table<C> wrap(java.lang.Class<C> aClass) {
+        return () -> aClass;
+    }
+
+    static <C> Table<C> wrap(Class<C> cClass) {
+        return wrap(cClass.get());
+    }
+
+    @SuppressWarnings("unchecked")
+    static <C> Table<C> wrap(C c) {
+        return wrap((java.lang.Class<C>) c.getClass());
+    }
+
     default String selectQuery() {
         // TODO: 06/07/2017 Realize behavior of classes linkage
 //        if (dynamicFields()
@@ -50,19 +63,6 @@ public interface Table<C> extends Class<C> {
                 columns()
                         .map(Column::toCreateQuery)
                         .collect(joining(", ")));
-    }
-
-    static <C> Table<C> wrap(java.lang.Class<C> aClass) {
-        return () -> aClass;
-    }
-
-    static <C> Table<C> wrap(Class<C> cClass) {
-        return wrap(cClass.get());
-    }
-
-    @SuppressWarnings("unchecked")
-    static <C> Table<C> wrap(C c) {
-        return wrap((java.lang.Class<C>) c.getClass());
     }
 
     default Stream<Column<C>> columns() {

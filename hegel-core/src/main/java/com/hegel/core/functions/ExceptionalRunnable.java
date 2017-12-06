@@ -6,22 +6,6 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface ExceptionalRunnable<E extends Throwable> extends Runnable {
 
-    void call() throws E;
-
-    @Override
-    default void run() {
-        try {
-            call();
-        } catch (Throwable e) {
-            //noinspection unchecked
-            ifThrowable((E) e);
-        }
-    }
-
-    default void ifThrowable(E e) {
-        throw new RuntimeException(e);
-    }
-
     @SafeVarargs
     static <E extends Throwable> void run(ExceptionalRunnable<E>... exceptionalRunnables) {
         Arrays.stream(exceptionalRunnables)
@@ -36,5 +20,21 @@ public interface ExceptionalRunnable<E extends Throwable> extends Runnable {
             //noinspection unchecked
             throw exceptionTransformer.apply((E) e);
         }
+    }
+
+    void call() throws E;
+
+    @Override
+    default void run() {
+        try {
+            call();
+        } catch (Throwable e) {
+            //noinspection unchecked
+            ifThrowable((E) e);
+        }
+    }
+
+    default void ifThrowable(E e) {
+        throw new RuntimeException(e);
     }
 }

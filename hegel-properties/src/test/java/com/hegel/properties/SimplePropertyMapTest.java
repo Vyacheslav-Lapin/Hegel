@@ -44,10 +44,10 @@ class SimplePropertyMapTest {
     @Test
     @Disabled
     void getBean() {
-//        SimpleTestPojo simpleTestPojo = PropertyMap.get(CONFIG_FILE_PATH, SimpleTestPojo.class);
+//        SimpleTestPojo simpleTestPojo = PropertyMap.map(CONFIG_FILE_PATH, SimpleTestPojo.class);
 //
 //        PropertyMap props = PropertyMap.fromFile(CONFIG_FILE_PATH);
-//        SimpleTestPojo expected = new SimpleTestPojo(props.get("param2"), Integer.parseInt(props.get("intParam")));
+//        SimpleTestPojo expected = new SimpleTestPojo(props.map("param2"), Integer.parseInt(props.map("intParam")));
 //
 //        assertEquals(expected, simpleTestPojo);
     }

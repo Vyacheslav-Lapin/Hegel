@@ -1,7 +1,5 @@
 package com.hegel.reflect;
 
-import java.lang.*;
-
 public interface Reflect {
 
     static void loadClass(String className) {

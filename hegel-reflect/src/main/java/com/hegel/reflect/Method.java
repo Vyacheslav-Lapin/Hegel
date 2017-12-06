@@ -6,14 +6,14 @@ import java.lang.reflect.InvocationTargetException;
 public interface Method<T, C> extends Executable<T, C, java.lang.reflect.Method> {
 
     @SuppressWarnings("unchecked")
-    @Override
-    default Class<T> getType() {
-        return Class.wrap((java.lang.Class<T>) get().getReturnType());
+    static <T, C> Method<T, C> wrap(java.lang.reflect.Method method) {
+        return () -> method;
     }
 
     @SuppressWarnings("unchecked")
-    static <T, C> Method<T, C> wrap(java.lang.reflect.Method method) {
-        return () -> method;
+    @Override
+    default Class<T> getType() {
+        return Class.wrap((java.lang.Class<T>) get().getReturnType());
     }
 
     @Override

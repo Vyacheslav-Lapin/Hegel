@@ -12,18 +12,35 @@ subprojects {
         mavenCentral()
     }
 
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0-M1'
+        }
+    }
+
+    apply plugin: 'org.junit.platform.gradle.plugin'
+
+    junitPlatform {
+        logManager 'org.apache.logging.log4j.jul.LogManager'
+    }
+
     configurations {
         testCompile.extendsFrom compileOnly
     }
 
     dependencies {
         compile 'org.apache.logging.log4j:log4j-core:+',
+                'org.apache.logging.log4j:log4j-jul:+',
                 'io.vavr:vavr:+'
 
         compileOnly 'org.projectlombok:lombok:+',
                 'edu.washington.cs.types.checker:checker-framework:+'
 
         testCompile 'org.junit.jupiter:junit-jupiter-api:+',
+                'org.junit.jupiter:junit-jupiter-engine:+',
                 'org.hamcrest:java-hamcrest:+'
     }
 }

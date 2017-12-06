@@ -5,6 +5,15 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface ExceptionalVarFunction<T, R, E extends Throwable> extends VarFunction<T, Exceptional<R, E>> {
 
+    @SafeVarargs
+    static <T, R, E extends Throwable> ExceptionalSupplier<R, E> supply(ExceptionalVarFunction<T, R, E> exceptionalVarFunction, T... params) {
+        return () -> exceptionalVarFunction.get(params);
+    }
+
+    static <T, R, E extends Throwable> Supplier<R> supplyUnchecked(ExceptionalVarFunction<T, R, E> exceptionalVarFunction, T... params) {
+        return supply(exceptionalVarFunction, params)::getOrThrowUnchecked;
+    }
+
     @SuppressWarnings("unchecked")
     R get(T... t) throws E;
 
@@ -26,14 +35,5 @@ public interface ExceptionalVarFunction<T, R, E extends Throwable> extends VarFu
     @SuppressWarnings("unchecked")
     default void executeOrThrowUnchecked(T... params) {
         getOrThrowUnchecked(params);
-    }
-
-    @SafeVarargs
-    static <T, R, E extends Throwable> ExceptionalSupplier<R, E> supply(ExceptionalVarFunction<T, R, E> exceptionalVarFunction, T... params) {
-        return () -> exceptionalVarFunction.get(params);
-    }
-
-    static <T, R, E extends Throwable> Supplier<R> supplyUnchecked(ExceptionalVarFunction<T, R, E> exceptionalVarFunction, T... params) {
-        return supply(exceptionalVarFunction, params)::getOrThrowUnchecked;
     }
 }

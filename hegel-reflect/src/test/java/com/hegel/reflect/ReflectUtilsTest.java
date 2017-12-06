@@ -13,11 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ReflectUtilsTest {
 
-    @FunctionalInterface
-    public interface TestFuncInt {
-        String hello(String name);
-    }
-
     @Test
     void baseProxyUsage() throws Exception {
         TestFuncInt realObj = getTestFuncInt();
@@ -68,5 +63,10 @@ class ReflectUtilsTest {
         assertEquals(proxyObj, proxyObj);
         assertNotEquals(proxyObj, new Object());
         assertNotEquals(proxyObj, null);
+    }
+
+    @FunctionalInterface
+    public interface TestFuncInt {
+        String hello(String name);
     }
 }

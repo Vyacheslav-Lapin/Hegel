@@ -6,6 +6,10 @@ import java.util.function.BooleanSupplier;
 @FunctionalInterface
 public interface ExceptionalBooleanSupplier<E extends Throwable> extends BooleanSupplier {
 
+    static <E extends Throwable> boolean call(ExceptionalBooleanSupplier<E> exceptionalBooleanSupplier) {
+        return exceptionalBooleanSupplier.getAsBoolean();
+    }
+
     boolean is() throws E;
 
     @Override
@@ -20,9 +24,5 @@ public interface ExceptionalBooleanSupplier<E extends Throwable> extends Boolean
 
     default boolean mapException(E e) {
         throw new RuntimeException(e);
-    }
-
-    static <E extends Throwable> boolean call(ExceptionalBooleanSupplier<E> exceptionalBooleanSupplier) {
-        return exceptionalBooleanSupplier.getAsBoolean();
     }
 }

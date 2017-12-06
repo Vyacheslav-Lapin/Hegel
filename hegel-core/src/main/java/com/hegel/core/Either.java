@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
-public final class Either<L, R> { //extends javaslang.control.Either<L, R>
+public final class Either<L, R> {
 
     private final L LEFT;
     private final R RIGHT;

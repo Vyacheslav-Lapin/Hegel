@@ -21,11 +21,42 @@ import static com.hegel.core.functions.ExceptionalConsumer.toUncheckedConsumer;
 @FunctionalInterface
 public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
 
+    static <T> T convert(Class<T> aClass, Object o) {
+        //noinspection unchecked
+        return (T) (aClass.isInstance(o) ? o :
+                aClass.equals(LocalDate.class) && o instanceof Date ? ((Date) o).toLocalDate() :
+                        // add other transformers here
+                        o);
+    }
+
+    static String getQueryString(Executable executable) {
+        String typeName = executable.getAnnotatedReturnType().getType().getTypeName();
+        return "SELECT "
+                + Arrays.stream(executable.getParameters())
+                .map(Parameter::getName)
+                .map(JdbcDao::toDbName)
+                .collect(Collectors.joining(", "))
+                + " FROM "
+                + typeName.substring(typeName.lastIndexOf('.') + 1);
+    }
+
+    static String toDbName(String name) {
+        return name.replaceAll("[A-Z]", "_$0").toLowerCase();
+    }
+
+    static String toCamelCase(String name) {
+        String[] words = name.split("_");
+        return words.length == 1 ? name : words[0]
+                + Arrays.stream(Arrays.copyOfRange(words, 1, words.length))
+                .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
+                .collect(Collectors.joining());
+    }
+
     default <T> ExceptionalSupplier<T, SQLException> connectionMapper(
             ExceptionalFunction<Connection, T, SQLException> connectionMapper) {
         return () -> {
             try (final Connection connection = get()) {
-                return connectionMapper.get(connection);
+                return connectionMapper.map(connection);
             }
         };
     }
@@ -34,7 +65,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalConsumer<Connection, SQLException> connectionMapper) {
         return () -> {
             try (final Connection connection = get()) {
-                connectionMapper.call(connection);
+                connectionMapper.put(connection);
             }
         };
     }
@@ -43,7 +74,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalFunction<Statement, T, SQLException> statementMapper) {
         return connectionMapper(connection -> {
             try (final Statement statement = connection.createStatement()) {
-                return statementMapper.get(statement);
+                return statementMapper.map(statement);
             }
         });
     }
@@ -52,7 +83,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalConsumer<Statement, SQLException> statementMapper) {
         return connectionPeeker(connection -> {
             try (final Statement statement = connection.createStatement()) {
-                statementMapper.call(statement);
+                statementMapper.put(statement);
             }
         });
     }
@@ -76,7 +107,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalFunction<ResultSet, T, SQLException> resultSetMapper) {
         return statementMapper(statement -> {
             try (final ResultSet rs = statement.executeQuery(sql)) {
-                return resultSetMapper.get(rs);
+                return resultSetMapper.map(rs);
             }
         });
     }
@@ -86,7 +117,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalConsumer<ResultSet, SQLException> resultSetMapper) {
         return statementPeeker(statement -> {
             try (final ResultSet rs = statement.executeQuery(sql)) {
-                resultSetMapper.call(rs);
+                resultSetMapper.put(rs);
             }
         });
     }
@@ -99,13 +130,13 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             String sql,
             ExceptionalFunction<ResultSet, T, SQLException> rowMapper) {
         return resultSetMapper(sql,
-                resultSet -> resultSet.next() ? Optional.of(rowMapper.get(resultSet)) : Optional.empty());
+                resultSet -> resultSet.next() ? Optional.of(rowMapper.map(resultSet)) : Optional.empty());
     }
 
     default ExceptionalRunnable<SQLException> rowPeeker(String sql, ExceptionalConsumer<ResultSet, SQLException> rowPeeker) {
         return resultSetPeeker(sql, resultSet -> {
             if (resultSet.next())
-                rowPeeker.call(resultSet);
+                rowPeeker.put(resultSet);
         });
     }
 
@@ -114,7 +145,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalConsumer<ResultSet, SQLException> rowPeeker) {
         return resultSetPeeker(sql, resultSet -> {
             while (resultSet.next())
-                rowPeeker.call(resultSet);
+                rowPeeker.put(resultSet);
         });
     }
 
@@ -122,7 +153,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             String sql,
             ExceptionalFunction<ResultSet, T, SQLException> rowMapper,
             Consumer<T> reducer) {
-        return rowsPeeker(sql, resultSet -> reducer.accept(rowMapper.get(resultSet)));
+        return rowsPeeker(sql, resultSet -> reducer.accept(rowMapper.map(resultSet)));
     }
 
     default <T, C extends Collection<T>> Exceptional<C, SQLException> collect(
@@ -146,7 +177,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             try (PreparedStatement preparedStatement = connection.prepareStatement(preparedSql)) {
                 for (int index = 0; index < params.length; index++)
                     preparedStatement.setObject(index + 1, params[index]);
-                return preparedStatementMapper.get(preparedStatement);
+                return preparedStatementMapper.map(preparedStatement);
             }
         }).call();
     }
@@ -160,7 +191,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalFunction<ResultSet, T, SQLException> preparedResultSetMapper) {
         return preparedStatementMapper(preparedSql, preparedStatement -> {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return preparedResultSetMapper.get(resultSet);
+                return preparedResultSetMapper.map(resultSet);
             }
         });
     }
@@ -169,7 +200,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             String preparedSql,
             ExceptionalFunction<ResultSet, T, SQLException> rowMapper) {
         return preparedResultSetMapper(preparedSql,
-                resultSet -> resultSet.next() ? Optional.of(rowMapper.get(resultSet)) : Optional.empty());
+                resultSet -> resultSet.next() ? Optional.of(rowMapper.map(resultSet)) : Optional.empty());
     }
 
     default ExceptionalVarConsumer<Object, SQLException> mapPreparedRows(
@@ -177,16 +208,32 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             ExceptionalConsumer<ResultSet, SQLException> rowMapper) {
         return preparedResultSetMapper(preparedSql, resultSet -> {
             while (resultSet.next())
-                rowMapper.call(resultSet);
+                rowMapper.put(resultSet);
             return 0;
         })::executeOrThrowUnchecked;
     }
+
+//    default <T> Collection<T> getObjects(Method method) {
+//        return collect(
+//                getQueryString(method),
+//                resultSet -> {
+//                    return ExceptionalFunction.getOrThrowUnchecked(params -> method.invoke(null, params),
+//                            Arrays.stream(method.getParameters())
+//                                    .map(parameter -> convert(parameter.getType(),
+//                                            ExceptionalFunction.getOrThrowUnchecked(
+//                                                    resultSet::getObject,
+//                                                    toDbName(parameter.getName()))))
+//                                    .toArray());
+//                },
+//                ArrayList<T>::new)
+//                .getOrThrowUnchecked();
+//    }
 
     default <T> ExceptionalVarConsumer<Object, SQLException> mapAndReducePreparedRows(
             String preparedSql,
             ExceptionalFunction<ResultSet, T, SQLException> rowMapper,
             Consumer<T> reducer) {
-        return mapPreparedRows(preparedSql, resultSet -> reducer.accept(rowMapper.get(resultSet)));
+        return mapPreparedRows(preparedSql, resultSet -> reducer.accept(rowMapper.map(resultSet)));
     }
 
     default <T, C extends Collection<T>> ExceptionalVarFunction<Object, C, SQLException> preparedCollect(
@@ -224,52 +271,5 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
                                 .toArray()),
                 ArrayList<T>::new)
                 .getOrThrowUnchecked();
-    }
-
-//    default <T> Collection<T> getObjects(Method method) {
-//        return collect(
-//                getQueryString(method),
-//                resultSet -> {
-//                    return ExceptionalFunction.getOrThrowUnchecked(params -> method.invoke(null, params),
-//                            Arrays.stream(method.getParameters())
-//                                    .map(parameter -> convert(parameter.getType(),
-//                                            ExceptionalFunction.getOrThrowUnchecked(
-//                                                    resultSet::getObject,
-//                                                    toDbName(parameter.getName()))))
-//                                    .toArray());
-//                },
-//                ArrayList<T>::new)
-//                .getOrThrowUnchecked();
-//    }
-
-    static <T> T convert(Class<T> aClass, Object o) {
-        //noinspection unchecked
-        return (T) (aClass.isInstance(o) ? o :
-                aClass.equals(LocalDate.class) && o instanceof Date ? ((Date) o).toLocalDate() :
-                        // add other transformers here
-                        o);
-    }
-
-    static String getQueryString(Executable executable) {
-        String typeName = executable.getAnnotatedReturnType().getType().getTypeName();
-        return "SELECT "
-                + Arrays.stream(executable.getParameters())
-                .map(Parameter::getName)
-                .map(JdbcDao::toDbName)
-                .collect(Collectors.joining(", "))
-                + " FROM "
-                + typeName.substring(typeName.lastIndexOf('.') + 1);
-    }
-
-    static String toDbName(String name) {
-        return name.replaceAll("[A-Z]", "_$0").toLowerCase();
-    }
-
-    static String toCamelCase(String name) {
-        String[] words = name.split("_");
-        return words.length == 1 ? name : words[0]
-                + Arrays.stream(Arrays.copyOfRange(words, 1, words.length))
-                .map(s -> Character.toUpperCase(s.charAt(0)) + s.substring(1))
-                .collect(Collectors.joining());
     }
 }

@@ -5,6 +5,10 @@ import java.util.function.Predicate;
 @FunctionalInterface
 public interface ExceptionalPredicate<T, E extends Throwable> extends Predicate<T> {
 
+    static <T, E extends Throwable> boolean call(T t, ExceptionalPredicate<T, E> exceptionalPredicate) {
+        return exceptionalPredicate.test(t);
+    }
+
     boolean is(T t) throws E;
 
     @Override
@@ -19,9 +23,5 @@ public interface ExceptionalPredicate<T, E extends Throwable> extends Predicate<
 
     default boolean mapException(E e) {
         throw new RuntimeException(e);
-    }
-
-    static <T, E extends Throwable> boolean call(T t, ExceptionalPredicate<T, E> exceptionalPredicate) {
-        return exceptionalPredicate.test(t);
     }
 }

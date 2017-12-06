@@ -7,9 +7,6 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface VarFunction<T, R> {
 
-    @SuppressWarnings("unchecked")
-    R apply(T... t);
-
     static <T, R> Supplier<R> supply(VarFunction<T, R> varFunction, T... params) {
         return () -> varFunction.apply(params);
     }
@@ -21,4 +18,7 @@ public interface VarFunction<T, R> {
             return varFunction.apply(result);
         };
     }
+
+    @SuppressWarnings("unchecked")
+    R apply(T... t);
 }

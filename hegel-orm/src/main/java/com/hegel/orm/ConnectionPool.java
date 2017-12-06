@@ -44,7 +44,7 @@ public interface ConnectionPool extends JdbcDao<ConnectionPool> {
 //    @SuppressWarnings("unused")
 //    @SneakyThrows
 //    static ConnectionPool create(String dbFilesFolderPath) {
-//        try (InputStream inputStream = Files.newInputStream(Paths.get(dbFilesFolderPath + DEFAULT_DB_PROPERTIES_FILE_NAME))) {
+//        try (InputStream inputStream = Files.newInputStream(Paths.map(dbFilesFolderPath + DEFAULT_DB_PROPERTIES_FILE_NAME))) {
 //            Properties properties = new Properties();
 //            properties.load(inputStream);
 //            return create(properties, dbFilesFolderPath);
@@ -52,7 +52,7 @@ public interface ConnectionPool extends JdbcDao<ConnectionPool> {
 //    }
 
 //    static ConnectionPool create(Properties properties, String dbFilesFolderPath) {
-//        ExceptionalConsumer.call(Class::forName, (String) properties.remove(JDBC_DRIVER_CLASS_KEY));
+//        ExceptionalConsumer.put(Class::forName, (String) properties.remove(JDBC_DRIVER_CLASS_KEY));
 //        String jdbcUrl = (String) properties.remove(JDBC_URL_KEY);
 //        int size = Integer.parseInt((String) properties.remove(JDBC_CONNECTION_POOL_SIZE_KEY));
 //        return create(jdbcUrl, properties, size, dbFilesFolderPath);
@@ -60,11 +60,11 @@ public interface ConnectionPool extends JdbcDao<ConnectionPool> {
 
     static ConnectionPool create(int size, String jdbcUrl, Properties properties) {
         return new Pool<>(
-                        Connection.class,
-                        ExceptionalBiFunction.supplyUnchecked(
-                                DriverManager::getConnection, jdbcUrl, properties),
-                        size
-                )::get;
+                Connection.class,
+                ExceptionalBiFunction.supplyUnchecked(
+                        DriverManager::getConnection, jdbcUrl, properties),
+                size
+        )::get;
     }
 
     default ConnectionPool executeScripts(String dbFilesFolderPath) {

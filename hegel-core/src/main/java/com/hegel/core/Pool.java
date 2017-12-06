@@ -34,14 +34,14 @@ public class Pool<T extends AutoCloseable> implements Supplier<T>, AutoCloseable
         return proxyMaker.apply(
                 (proxy, method, chain, args) ->
                         method.getName().equals(CLOSE) && !isClosing ?
-                                avoid(freeObjectsQueue.offer(proxy)):
+                                avoid(freeObjectsQueue.offer(proxy)) :
                                 chain.apply(t));
     }
 
     @Override
     public T get() {
         if (isClosing)
-            throw new RuntimeException("Trying to get object from closed pool!");
+            throw new RuntimeException("Trying to map object from closed pool!");
         return ExceptionalSupplier.getOrThrowUnchecked(freeObjectsQueue::take);
     }
 

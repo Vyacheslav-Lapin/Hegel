@@ -42,12 +42,6 @@ public interface PropertyMap extends Map<String, String> {
         return from(Paths.get(filePath));
     }
 
-    default Properties toProperties() {
-        Properties properties = new Properties();
-        properties.putAll(this);
-        return properties;
-    }
-
     static PropertyMap from(String... params) {
 
         assert params.length % 2 == 0;
@@ -66,7 +60,13 @@ public interface PropertyMap extends Map<String, String> {
         return null;
     }
 
-//    static <T> T get(String configFilePath, Class<T> tClass) {
+    default Properties toProperties() {
+        Properties properties = new Properties();
+        properties.putAll(this);
+        return properties;
+    }
+
+//    static <T> T map(String configFilePath, Class<T> tClass) {
 //
 //        PropertyMap props = fromFile(configFilePath);
 //        Class<T> xClass = Class.wrap(tClass);
@@ -76,7 +76,7 @@ public interface PropertyMap extends Map<String, String> {
 //
 //            Stream.of(tClass.getFields())
 //                    .filter(field -> !Modifier.isStatic(field.getModifiers()))
-//                    .forEach(field -> parseSet(props.get(field.getName()), t, field));
+//                    .forEach(field -> parseSet(props.map(field.getName()), t, field));
 //
 //            return t;
 //        } catch (InstantiationException | IllegalAccessException e) {

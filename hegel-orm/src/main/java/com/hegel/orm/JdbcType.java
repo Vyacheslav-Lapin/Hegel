@@ -30,7 +30,7 @@ public enum JdbcType {
     REF(Ref.class);
 
     private Class<?> type;
-    
+
     JdbcType(BaseType baseType) {
         this(baseType.getType());
     }

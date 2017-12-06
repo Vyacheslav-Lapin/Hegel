@@ -11,6 +11,14 @@ public interface Lambderator<E> extends Spliterator<E> {
         return lambderator;
     }
 
+    static <E> Stream<E> stream(Lambderator<E> lambderator, boolean parallel) {
+        return lambderator.stream(parallel);
+    }
+
+    static <E> Stream<E> stream(Lambderator<E> lambderator) {
+        return lambderator.stream();
+    }
+
     @Override
     default Spliterator<E> trySplit() {
         return null;
@@ -32,13 +40,5 @@ public interface Lambderator<E> extends Spliterator<E> {
 
     default Stream<E> stream() {
         return stream(false);
-    }
-
-    static <E> Stream<E> stream(Lambderator<E> lambderator, boolean parallel) {
-        return lambderator.stream(parallel);
-    }
-
-    static <E> Stream<E> stream(Lambderator<E> lambderator) {
-        return lambderator.stream();
     }
 }

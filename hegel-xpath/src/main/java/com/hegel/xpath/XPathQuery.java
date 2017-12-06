@@ -2,6 +2,7 @@ package com.hegel.xpath;
 
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmNode;
+
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -10,14 +11,15 @@ import java.util.stream.Stream;
 @SuppressWarnings("WeakerAccess")
 public class XPathQuery {
 
-    private XPathSelector xPathSelector;
     private static XPathQueryExecutor xPathQueryExecutor;
+    private XPathSelector xPathSelector;
 
     public XPathQuery(String xPathExpression) {
         if (xPathQueryExecutor == null)
             synchronized (XPathQuery.class) {
                 if (xPathQueryExecutor == null)
-                    xPathQueryExecutor = new XPathQueryExecutor(); }
+                    xPathQueryExecutor = new XPathQueryExecutor();
+            }
         xPathSelector = xPathQueryExecutor.toSelector(xPathExpression);
     }
 

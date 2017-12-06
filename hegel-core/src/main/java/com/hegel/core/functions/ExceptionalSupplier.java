@@ -6,6 +6,22 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Exceptional<T, E>> {
 
+    static <T, E extends Exception> Exceptional<T, E> call(ExceptionalSupplier<T, E> exceptionalSupplier) {
+        return exceptionalSupplier.get();
+    }
+
+    static <T, E extends Exception> T getOrThrowUnchecked(ExceptionalSupplier<T, E> exceptionalSupplier) {
+        return call(exceptionalSupplier).getOrThrowUnchecked();
+    }
+
+    static <T> T avoid(Object t) {
+        return null;
+    }
+
+    static <T, E extends Throwable> Supplier<T> toUncheckedSupplier(ExceptionalSupplier<T, E> exceptionalSupplier) {
+        return exceptionalSupplier::getOrThrowUnchecked;
+    }
+
     T call() throws E;
 
     @SuppressWarnings("unchecked")
@@ -28,21 +44,5 @@ public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Ex
 
     default Optional<T> getAsOptional() {
         return get().toOptional();
-    }
-
-    static <T, E extends Exception> Exceptional<T, E> call(ExceptionalSupplier<T, E> exceptionalSupplier) {
-        return exceptionalSupplier.get();
-    }
-
-    static <T, E extends Exception> T getOrThrowUnchecked(ExceptionalSupplier<T, E> exceptionalSupplier) {
-        return call(exceptionalSupplier).getOrThrowUnchecked();
-    }
-
-    static <T> T avoid(Object t) {
-        return null;
-    }
-
-    static <T, E extends Throwable> Supplier<T> toUncheckedSupplier(ExceptionalSupplier<T, E> exceptionalSupplier) {
-        return exceptionalSupplier::getOrThrowUnchecked;
     }
 }

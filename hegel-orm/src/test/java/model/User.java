@@ -12,11 +12,11 @@ import static lombok.AccessLevel.PRIVATE;
 
 /**
  * CREATE TABLE User (
- *  id            INT PRIMARY KEY,
- *  email         VARCHAR(20),
- *  password      VARCHAR(20),
- *
- *  CONSTRAINT user_from_person_inheritance FOREIGN KEY (id) REFERENCES Person(id)
+ * id            INT PRIMARY KEY,
+ * email         VARCHAR(20),
+ * password      VARCHAR(20),
+ * <p>
+ * CONSTRAINT user_from_person_inheritance FOREIGN KEY (id) REFERENCES Person(id)
  * );
  */
 @EqualsAndHashCode(callSuper = true)

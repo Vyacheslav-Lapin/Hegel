@@ -8,10 +8,20 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, E>>/*, javaslang.control.Try */ {
+public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, E>> {
 
     static <T, E extends Throwable> Exceptional<T, E> wrap(Either<T, E> either) {
         return () -> either;
+    }
+
+    static <T, E extends Throwable> Exceptional<T, E> withValue(T value) {
+        Either<T, E> left = Either.left(value);
+        return () -> left;
+    }
+
+    static <T, E extends Throwable> Exceptional<T, E> withException(E exception) {
+        Either<T, E> right = Either.right(exception);
+        return () -> right;
     }
 
     @SuppressWarnings("unused")
@@ -40,19 +50,9 @@ public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, 
     default <E1 extends Throwable> T getOrThrowUnchecked() throws E1 {
         return getOrThrow(RuntimeException::new);
     }
-    
+
     default <E1 extends Throwable> T getOrThrow(Function<E, E1> exceptionMapper) throws E1 {
         return mapException(exceptionMapper).getOrThrow();
-    }
-
-    static <T, E extends Throwable> Exceptional<T, E> withValue(T value) {
-        Either<T, E> left = Either.left(value);
-        return () -> left;
-    }
-
-    static <T, E extends Throwable> Exceptional<T, E> withException(E exception) {
-        Either<T, E> right = Either.right(exception);
-        return () -> right;
     }
 
     default Option<T> toOption() {

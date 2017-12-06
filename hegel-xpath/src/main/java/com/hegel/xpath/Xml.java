@@ -2,6 +2,7 @@ package com.hegel.xpath;
 
 import net.sf.saxon.s9api.XdmNode;
 import org.jsoup.Connection;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
@@ -12,14 +13,15 @@ import java.util.stream.Stream;
 @SuppressWarnings("WeakerAccess")
 public class Xml {
 
-    private XdmNode document;
     private static XPathQueryExecutor xPathQueryExecutor;
+    private XdmNode document;
 
     private Xml() {
         if (xPathQueryExecutor == null)
             synchronized (XPathQuery.class) {
                 if (xPathQueryExecutor == null)
-                    xPathQueryExecutor = new XPathQueryExecutor(); }
+                    xPathQueryExecutor = new XPathQueryExecutor();
+            }
     }
 
     public Xml(InputStream inputStream) {

@@ -16,10 +16,6 @@ public interface Column<C> extends Field<C> {
         return cField::get;
     }
 
-    default String toSqlName() {
-        return get().getName().replaceAll("([A-Z])", "_$1").toLowerCase();
-    }
-
     static String fromSqlName(String sqlName) {
 
         boolean isFirstString = true;
@@ -33,6 +29,10 @@ public interface Column<C> extends Field<C> {
                         .append(string.substring(1));
 
         return result.toString();
+    }
+
+    default String toSqlName() {
+        return get().getName().replaceAll("([A-Z])", "_$1").toLowerCase();
     }
 
     default void writeToLiquibaseXml(XMLStreamWriter xmlStreamWriter) {

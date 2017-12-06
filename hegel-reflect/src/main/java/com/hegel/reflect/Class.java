@@ -22,6 +22,17 @@ public interface Class<C> extends Supplier<java.lang.Class<C>> {
         return () -> (java.lang.Class<C>) obj.getClass();
     }
 
+    static boolean isInherited(java.lang.Class<?> theClass, java.lang.Class<?> aClass) {
+
+        while (theClass != null)
+            if (theClass == aClass)
+                return true;
+            else
+                theClass = theClass.getSuperclass();
+
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     default <F extends Field<C>> Try<F> getField(String name) {
         return Try.of(() -> get().getDeclaredField(name))
@@ -51,17 +62,6 @@ public interface Class<C> extends Supplier<java.lang.Class<C>> {
 
     default boolean isInherited(Class<?> aClass) {
         return isInherited(get(), aClass.get());
-    }
-
-    static boolean isInherited(java.lang.Class<?> theClass, java.lang.Class<?> aClass) {
-
-        while (theClass != null)
-            if (theClass == aClass)
-                return true;
-            else
-                theClass = theClass.getSuperclass();
-
-        return false;
     }
 
     default <M extends Method<C>> Stream<M> methods() {

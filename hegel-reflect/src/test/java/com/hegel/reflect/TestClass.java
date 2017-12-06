@@ -2,13 +2,14 @@ package com.hegel.reflect;
 
 public class TestClass {
 
+    public static final double PI = Math.PI;
+    public static Integer counter;
+    volatile int anInt = 5;
     private String string = "мама мыла раму";
 
-    volatile int anInt = 5;
-
-    public static final double PI = Math.PI;
-
-    public static Integer counter;
+    public static double getPI() {
+        return PI;
+    }
 
     public String getString() {
         return string;
@@ -16,9 +17,5 @@ public class TestClass {
 
     public int getAnInt() {
         return anInt;
-    }
-
-    public static double getPI() {
-        return PI;
     }
 }

@@ -23,10 +23,6 @@ public enum BaseType {
         this.aClass = aClass;
     }
 
-    public Class<?> getType() {
-        return aClass;
-    }
-
     public static BaseType from(Class<?> type) {
         return Stream.of(values())
                 .filter(baseType -> type.isInherited(baseType.getType()))
@@ -36,5 +32,9 @@ public enum BaseType {
 
     public static BaseType from(java.lang.Class<?> type) {
         return from(Class.wrap(type));
+    }
+
+    public Class<?> getType() {
+        return aClass;
     }
 }

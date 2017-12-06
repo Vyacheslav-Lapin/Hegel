@@ -18,6 +18,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @SuppressWarnings("WeakerAccess")
 public class Xhtml extends Xml {
 
+    private static HtmlCleaner HTML_CLEANER = new HtmlCleaner();
+    private static CleanerProperties PROPS = HTML_CLEANER.getProperties();
+    private static Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
+
     protected Xhtml(InputStream inputStream) {
         super(toXhtmlInputStream(inputStream));
     }
@@ -30,6 +34,7 @@ public class Xhtml extends Xml {
         this(new ByteArrayInputStream(html.getBytes(encoding)));
     }
 
+
     protected Xhtml(String html) {
         this(html, UTF_8);
     }
@@ -41,7 +46,6 @@ public class Xhtml extends Xml {
     protected Xhtml(URL url) {
         this(HttpRequest.get(url));
     }
-
 
     public static Xhtml from(InputStream inputStream) {
         return new Xhtml(inputStream);
@@ -74,11 +78,6 @@ public class Xhtml extends Xml {
     public static Xhtml from(URL url) {
         return new Xhtml(url);
     }
-
-
-    private static HtmlCleaner HTML_CLEANER = new HtmlCleaner();
-    private static CleanerProperties PROPS = HTML_CLEANER.getProperties();
-    private static Pattern PATTERN = Pattern.compile("<!(DOCTYPE\\s+[^>]*)>");
 
     protected static String getCleanDocument(InputStream htmlInputStream) {
         try (InputStream inputStream = htmlInputStream) {

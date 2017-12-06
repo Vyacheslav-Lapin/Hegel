@@ -5,24 +5,6 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface ExceptionalVarConsumer<T, E extends Throwable> extends VarConsumer<T> {
 
-    @SuppressWarnings("unchecked")
-    void call(T... params) throws E;
-
-    @SuppressWarnings("unchecked")
-    @Override
-    default void accept(T... params) {
-        try {
-            call(params);
-        } catch (Throwable e) {
-            //noinspection unchecked
-            ifThrowable((E) e);
-        }
-    }
-
-    default void ifThrowable(E e) {
-        throw new RuntimeException(e);
-    }
-
     static <T, E extends Throwable> VarConsumer<T> toUnchecked(ExceptionalVarConsumer<T, E> exceptionalConsumer) {
         return exceptionalConsumer;
     }
@@ -54,5 +36,23 @@ public interface ExceptionalVarConsumer<T, E extends Throwable> extends VarConsu
     static <T, E extends Throwable> Runnable supplyUnchacked(ExceptionalVarConsumer<T, E> exceptionalVarConsumer,
                                                              T... params) {
         return supply(exceptionalVarConsumer, params);
+    }
+
+    @SuppressWarnings("unchecked")
+    void call(T... params) throws E;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    default void accept(T... params) {
+        try {
+            call(params);
+        } catch (Throwable e) {
+            //noinspection unchecked
+            ifThrowable((E) e);
+        }
+    }
+
+    default void ifThrowable(E e) {
+        throw new RuntimeException(e);
     }
 }

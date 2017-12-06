@@ -12,8 +12,7 @@ import static org.hamcrest.core.Is.is;
 class LambderatorTest {
 
 
-
-//    private BufferedReader reader = new BufferedReader(
+    //    private BufferedReader reader = new BufferedReader(
 //            new FileReader(
 //                    new File()
 //            )
@@ -24,6 +23,7 @@ class LambderatorTest {
     void setUp() {
         lambderator = new Lambderator<String>() {
             int i = 5;
+
             @Override
             public boolean tryAdvance(Consumer<? super String> action) {
                 action.accept(String.valueOf(i--));
