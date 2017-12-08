@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0-M1'
+    }
+}
+
 subprojects {
     group 'com.hegel'
     version '1.0-SNAPSHOT'
@@ -12,20 +21,11 @@ subprojects {
         mavenCentral()
     }
 
-    buildscript {
-        repositories {
-            mavenCentral()
-        }
-        dependencies {
-            classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0-M1'
-        }
-    }
-
     apply plugin: 'org.junit.platform.gradle.plugin'
 
-    junitPlatform {
-        logManager 'org.apache.logging.log4j.jul.LogManager'
-    }
+//    junitPlatform {
+//        logManager 'org.apache.logging.log4j.jul.LogManager'
+//    }
 
     configurations {
         testCompile.extendsFrom compileOnly
@@ -45,9 +45,8 @@ subprojects {
     }
 }
 
-// type in terminal: ./gradlew wrapper --gradle-version=4.4-rc-6
+// type in terminal: ./gradlew wrapper --gradle-version=4.4
 task Wrapper(type: Wrapper) {
     description = 'Generates gradlew[.bat] scripts'
-    gradleVersion = '4.4-rc-6'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+    gradleVersion = '4.4'
 }

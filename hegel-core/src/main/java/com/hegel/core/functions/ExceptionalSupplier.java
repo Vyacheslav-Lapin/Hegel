@@ -1,10 +1,11 @@
 package com.hegel.core.functions;
 
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Exceptional<T, E>> {
+public interface ExceptionalSupplier<T, E extends Exception> extends Supplier<Exceptional<T, E>>, Callable<T> {
 
     static <T, E extends Exception> Exceptional<T, E> call(ExceptionalSupplier<T, E> exceptionalSupplier) {
         return exceptionalSupplier.get();
@@ -18,7 +19,8 @@ public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Ex
         return null;
     }
 
-    static <T, E extends Throwable> Supplier<T> toUncheckedSupplier(ExceptionalSupplier<T, E> exceptionalSupplier) {
+    static <T, E extends Exception> Supplier<T> toUncheckedSupplier(
+            ExceptionalSupplier<T, E> exceptionalSupplier) {
         return exceptionalSupplier::getOrThrowUnchecked;
     }
 
@@ -29,7 +31,7 @@ public interface ExceptionalSupplier<T, E extends Throwable> extends Supplier<Ex
     default Exceptional<T, E> get() {
         try {
             return Exceptional.withValue(call());
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return Exceptional.withException((E) e);
         }
     }

@@ -1,3 +1,3 @@
 dependencies {
-    compile 'org.hamcrest:java-hamcrest:+'
+    compileOnly 'org.hamcrest:java-hamcrest:+'
 }

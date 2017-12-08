@@ -1,27 +1,31 @@
 package com.hegel.core.functions;
 
 import com.hegel.core.Either;
-import io.vavr.control.Option;
 
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, E>> {
+public interface Exceptional<T, E extends Exception> extends Supplier<Either<T, E>> {
 
-    static <T, E extends Throwable> Exceptional<T, E> wrap(Either<T, E> either) {
+    static <T, E extends Exception> Exceptional<T, E> wrap(Either<T, E> either) {
         return () -> either;
     }
 
-    static <T, E extends Throwable> Exceptional<T, E> withValue(T value) {
+    static <T, E extends Exception> Exceptional<T, E> withValue(T value) {
         Either<T, E> left = Either.left(value);
         return () -> left;
     }
 
-    static <T, E extends Throwable> Exceptional<T, E> withException(E exception) {
+    static <T, E extends Exception> Exceptional<T, E> withException(E exception) {
         Either<T, E> right = Either.right(exception);
         return () -> right;
+    }
+
+    static <R, E extends Exception> R throwAsUnchecked(Exception e) throws E {
+        //noinspection unchecked
+        throw (E) e;
     }
 
     @SuppressWarnings("unused")
@@ -29,34 +33,31 @@ public interface Exceptional<T, E extends Throwable> extends Supplier<Either<T, 
         return wrap(get().mapLeft(valueTransformer));
     }
 
-    default <E1 extends Throwable> Exceptional<T, E1> mapException(Function<E, E1> exceptionTransformer) {
+    default <E1 extends Exception> Exceptional<T, E1> mapException(Function<E, E1> exceptionTransformer) {
         return wrap(get().mapRight(exceptionTransformer));
     }
 
-    default <T1, E1 extends Throwable> Exceptional<T1, E1> map(Function<T, T1> valueTransformer,
+    default <T1, E1 extends Exception> Exceptional<T1, E1> map(Function<T, T1> valueTransformer,
                                                                Function<E, E1> exceptionTransformer) {
         return wrap(get().map(valueTransformer, exceptionTransformer));
     }
 
     default T getOrThrow() throws E {
-        final Either<T, E> either = get();
-        if (either.isLeft()) {
+        Either<T, E> either = get();
+        if (either.isLeft())
             return either.left();
-        } else {
+        else
             throw either.right();
-        }
     }
 
-    default <E1 extends Throwable> T getOrThrowUnchecked() throws E1 {
-        return getOrThrow(RuntimeException::new);
-    }
-
-    default <E1 extends Throwable> T getOrThrow(Function<E, E1> exceptionMapper) throws E1 {
+    @SuppressWarnings("unused")
+    default <E1 extends Exception> T getOrThrow(Function<E, E1> exceptionMapper) throws E1 {
         return mapException(exceptionMapper).getOrThrow();
     }
 
-    default Option<T> toOption() {
-        return Option.of(get().left());
+    default T getOrThrowUnchecked() {
+        Either<T, E> either = get();
+        return either.isLeft() ? either.left() : throwAsUnchecked(either.right());
     }
 
     default Optional<T> toOptional() {

@@ -19,7 +19,7 @@ class EitherTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    void left() throws Exception {
+    void left() {
         new Random().ints(20, 0, 2)
                 .mapToObj(i -> i == 0
                         ? Either.<String, Integer>left("left value (String)")
@@ -31,31 +31,31 @@ class EitherTest {
     }
 
     @Test
-    void leftWorksCorrectly() throws Exception {
+    void leftWorksCorrectly() {
         assertThat(eitherLeft.left(), is(object));
         assertThat(eitherRight.left(), nullValue());
     }
 
     @Test
-    void rightWorksCorrectly() throws Exception {
+    void rightWorksCorrectly() {
         assertThat(eitherRight.right(), is(object));
         assertThat(eitherLeft.right(), nullValue());
     }
 
     @Test
-    void isLeftWorksCorrectly() throws Exception {
+    void isLeftWorksCorrectly() {
         assertThat(eitherLeft.isLeft(), is(true));
         assertThat(eitherRight.isLeft(), is(false));
     }
 
     @Test
-    void isRightWorksCorrectly() throws Exception {
+    void isRightWorksCorrectly() {
         assertThat(eitherRight.isRight(), is(true));
         assertThat(eitherLeft.isRight(), is(false));
     }
 
     @Test
-    void peekLeftWorksCorrectly() throws Exception {
+    void peekLeftWorksCorrectly() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         eitherRight.peekLeft(o -> byteArrayOutputStream.write(2));
@@ -66,7 +66,7 @@ class EitherTest {
     }
 
     @Test
-    void peekRightWorksCorrectly() throws Exception {
+    void peekRightWorksCorrectly() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         eitherLeft.peekRight(o -> byteArrayOutputStream.write(2));
@@ -77,7 +77,7 @@ class EitherTest {
     }
 
     @Test
-    void peekWorksCorrectly() throws Exception {
+    void peekWorksCorrectly() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         eitherRight.peek(
@@ -89,40 +89,40 @@ class EitherTest {
     }
 
     @Test
-    void mapLeftWorksCorrectly() throws Exception {
+    void mapLeftWorksCorrectly() {
         Optional<String> optionalLeft = eitherLeft.mapLeft(Object::toString).optionalLeft();
         assertTrue(optionalLeft.isPresent() && optionalLeft.get().equals(object.toString()));
     }
 
     @Test
-    void mapRightWorksCorrectly() throws Exception {
+    void mapRightWorksCorrectly() {
         Optional<String> optionalRight = eitherRight.mapRight(Object::toString).optionalRight();
         assertTrue(optionalRight.isPresent() && optionalRight.get().equals(object.toString()));
     }
 
     @Test
-    void mapWorksCorrectly() throws Exception {
+    void mapWorksCorrectly() {
         Optional<String> optionalRight = eitherRight.map(Object::toString, Object::toString).optionalRight();
         assertTrue(optionalRight.isPresent() && optionalRight.get().equals(object.toString()));
     }
 
     @Test
-    void swapWorksCorrectly() throws Exception {
+    void swapWorksCorrectly() {
 
     }
 
     @Test
-    void optionalLeftWorksCorrectly() throws Exception {
+    void optionalLeftWorksCorrectly() {
 
     }
 
     @Test
-    void optionalRightWorksCorrectly() throws Exception {
+    void optionalRightWorksCorrectly() {
 
     }
 
     @Test
-    void foldWorksCorrectly() throws Exception {
+    void foldWorksCorrectly() {
 
     }
 }
