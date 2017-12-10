@@ -80,6 +80,12 @@ public final class Either<L, R> {
                 : right(rightFunction.apply(RIGHT));
     }
 
+    public <T> T fold(Function<L, T> leftFunction, Function<R, T> rightFunction) {
+        return isLeft()
+                ? leftFunction.apply(LEFT)
+                : rightFunction.apply(RIGHT);
+    }
+
     public void apply(Consumer<L> leftConsumer, Consumer<R> rightConsumer) {
         if (isLeft())
             leftConsumer.accept(LEFT);
@@ -97,11 +103,5 @@ public final class Either<L, R> {
 
     public Optional<R> optionalRight() {
         return Optional.ofNullable(RIGHT);
-    }
-
-    public <T> T fold(Function<L, T> leftFunction, Function<R, T> rightFunction) {
-        return isLeft()
-                ? leftFunction.apply(LEFT)
-                : rightFunction.apply(RIGHT);
     }
 }

@@ -3,12 +3,14 @@ package com.hegel.core;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EitherTest {
@@ -108,21 +110,38 @@ class EitherTest {
 
     @Test
     void swapWorksCorrectly() {
-
+        assertThat(eitherLeft.swap().right(), is(object));
     }
 
     @Test
     void optionalLeftWorksCorrectly() {
+        //noinspection ConstantConditions
+        assertThat(eitherLeft.optionalLeft().get(), is(object));
 
+        //noinspection ConstantConditions
+        assertThrows(NoSuchElementException.class, () ->
+                assertThat(eitherRight.optionalLeft().get(), is(object)));
     }
 
     @Test
     void optionalRightWorksCorrectly() {
-
+        //noinspection ConstantConditions
+        assertThat(eitherRight.optionalRight().get(), is(object));
+        //noinspection ConstantConditions
+        assertThrows(NoSuchElementException.class, () ->
+                assertThat(eitherLeft.optionalRight().get(), is(object)));
     }
 
     @Test
     void foldWorksCorrectly() {
+        assertThat(eitherLeft.fold(
+                Object::toString,
+                o -> Integer.valueOf(o.hashCode()).toString()
+        ), is(object.toString()));
 
+        assertThat(eitherRight.fold(
+                o -> Integer.valueOf(o.hashCode()).toString(),
+                Object::toString
+        ), is(object.toString()));
     }
 }
