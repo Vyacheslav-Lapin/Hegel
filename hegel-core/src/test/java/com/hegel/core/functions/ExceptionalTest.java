@@ -1,15 +1,16 @@
 package com.hegel.core.functions;
 
 import com.hegel.core.Either;
-import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExceptionalTest {
 
@@ -49,17 +50,27 @@ class ExceptionalTest {
     @Test
     @DisplayName("ThrowAsUnchecked method works correctly")
     void throwAsUnchecked() {
-
+        assertThrows(SQLException.class, () ->
+                Exceptional.throwAsUnchecked(new SQLException()));
     }
 
     @Test
     @DisplayName("MapValue method works correctly")
     void mapValue() {
+        assertEquals(
+                Exceptional.withValue(o)
+                        .mapValue(Object::toString).getOrThrowUnchecked(),
+                o.toString());
     }
 
     @Test
     @DisplayName("MapException method works correctly")
     void mapException() {
+        assertThrows(IOException.class, () ->
+                Exceptional.withException(new SQLException())
+                        .mapException(e -> new IOException())
+                .getOrThrowUnchecked()
+        );
     }
 
     @Test
