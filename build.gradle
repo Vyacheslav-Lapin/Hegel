@@ -39,6 +39,8 @@ subprojects {
         compileOnly 'org.projectlombok:lombok:+',
                 'edu.washington.cs.types.checker:checker-framework:+'
 
+        testCompileOnly 'org.apiguardian:apiguardian-api:+'
+
         testCompile 'org.junit.jupiter:junit-jupiter-api:+',
                 'org.junit.jupiter:junit-jupiter-engine:+',
                 'org.hamcrest:java-hamcrest:+'

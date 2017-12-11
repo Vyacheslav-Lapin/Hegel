@@ -9,14 +9,15 @@ import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExceptionalTest {
 
+    Object o = new Object();
+
     @Test
+    @DisplayName("wrap method works correctly")
     void wrap() {
-        val o = new Object();
         assertThat(
                 Exceptional.wrap(
                         Either.left(o)).getOrThrowUnchecked(),
@@ -24,15 +25,60 @@ class ExceptionalTest {
     }
 
     @Test
-    void withValue() {
-        val o = new Object();
-        assertEquals(Exceptional.withValue(o).getOrThrowUnchecked(), o);
-    }
-
-    @Test
+    @DisplayName("getOrThrowUnchecked method works correctly")
     void getOrThrowUnchecked() {
         assertThrows(SQLException.class, () ->
                 Exceptional.withException(new SQLException())
                         .getOrThrowUnchecked());
+    }
+
+    @Test
+    @DisplayName("withValue method works correctly")
+    void withValue() {
+        assertEquals(Exceptional.withValue(o).getOrThrowUnchecked(), o);
+    }
+
+    @Test
+    @DisplayName("withException method works correctly")
+    void withException() {
+        assertThrows(SQLException.class, () ->
+                Exceptional.withException(new SQLException())
+                        .getOrThrowUnchecked());
+    }
+
+    @Test
+    @DisplayName("ThrowAsUnchecked method works correctly")
+    void throwAsUnchecked() {
+
+    }
+
+    @Test
+    @DisplayName("MapValue method works correctly")
+    void mapValue() {
+    }
+
+    @Test
+    @DisplayName("MapException method works correctly")
+    void mapException() {
+    }
+
+    @Test
+    @DisplayName("Map method works correctly")
+    void map() {
+    }
+
+    @Test
+    @DisplayName("GetOrThrow method works correctly")
+    void getOrThrow() {
+    }
+
+    @Test
+    @DisplayName("GetOrThrow1 method works correctly")
+    void getOrThrow1() {
+    }
+
+    @Test
+    @DisplayName("ToOptional method works correctly")
+    void ToOptional() {
     }
 }

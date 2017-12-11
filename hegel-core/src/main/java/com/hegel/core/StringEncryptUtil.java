@@ -8,7 +8,10 @@ import java.security.MessageDigest;
 public interface StringEncryptUtil {
 
     String ALGORITHM = "MD5";
-    MessageDigest ENCRYPTOR = ExceptionalFunction.getOrThrowUnchecked(MessageDigest::getInstance, ALGORITHM);
+
+    @SuppressWarnings("SpellCheckingInspection")
+    MessageDigest ENCRYPTOR = ExceptionalFunction.getOrThrowUnchecked(
+            MessageDigest::getInstance, ALGORITHM);
 
     static String encrypt(String s) {
 

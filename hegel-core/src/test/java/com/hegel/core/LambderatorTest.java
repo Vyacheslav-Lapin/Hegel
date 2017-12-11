@@ -17,20 +17,16 @@ class LambderatorTest {
 //                    new File()
 //            )
 //    );
-    private Lambderator<String> lambderator; // TODO: 18/02/2017
+    @SuppressWarnings("SpellCheckingInspection")
+    private Lambderator<String> lambderator = new Lambderator<String>() {
+        int i = 5;
 
-    @BeforeEach
-    void setUp() {
-        lambderator = new Lambderator<String>() {
-            int i = 5;
-
-            @Override
-            public boolean tryAdvance(Consumer<? super String> action) {
-                action.accept(String.valueOf(i--));
-                return i != 0;
-            }
-        };
-    }
+        @Override
+        public boolean tryAdvance(Consumer<? super String> action) {
+            action.accept(String.valueOf(i--));
+            return i != 0;
+        }
+    };
 
     @Test
     void trySplit() {
