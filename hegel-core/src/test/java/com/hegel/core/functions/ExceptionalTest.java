@@ -9,8 +9,7 @@ import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExceptionalTest {
 
@@ -69,18 +68,38 @@ class ExceptionalTest {
         assertThrows(IOException.class, () ->
                 Exceptional.withException(new SQLException())
                         .mapException(e -> new IOException())
-                .getOrThrowUnchecked()
+                        .getOrThrowUnchecked()
         );
     }
 
     @Test
     @DisplayName("Map method works correctly")
     void map() {
+        assertEquals(
+                Exceptional.withValue(o)
+                        .map(
+                                Object::toString,
+                                e -> new IOException())
+                        .getOrThrowUnchecked(),
+                o.toString());
+
+        assertThrows(IOException.class, () ->
+                Exceptional.withException(new SQLException())
+                        .map(
+                                Object::toString,
+                                e -> new IOException())
+                        .getOrThrowUnchecked()
+        );
     }
 
     @Test
     @DisplayName("GetOrThrow method works correctly")
     void getOrThrow() {
+        assertThrows(SQLException.class, () -> {
+            Exceptional.withException(new SQLException())
+                    .getOrThrow();
+            fail("GetOrThrow method works not correctly");
+        });
     }
 
     @Test
