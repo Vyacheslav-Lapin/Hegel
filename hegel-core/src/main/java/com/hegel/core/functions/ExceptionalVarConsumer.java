@@ -52,6 +52,9 @@ public interface ExceptionalVarConsumer<T, E extends Exception> extends VarConsu
         }
     }
 
+    /**
+     * Override this method if you wanna catch some of exception
+     */
     default void ifException(E e) {
         Exceptional.throwAsUnchecked(e);
     }

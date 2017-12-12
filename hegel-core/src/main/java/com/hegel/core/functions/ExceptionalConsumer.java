@@ -50,6 +50,9 @@ public interface ExceptionalConsumer<T, E extends Exception> extends Consumer<T>
         }
     }
 
+    /**
+     * Override this method if you wanna catch some of exception
+     */
     default void ifException(E e) {
         Exceptional.throwAsUnchecked(e);
     }

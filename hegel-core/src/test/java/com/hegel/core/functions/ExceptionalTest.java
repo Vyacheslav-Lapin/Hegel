@@ -111,7 +111,7 @@ class ExceptionalTest {
     @DisplayName("GetOrThrow(mapper) method works correctly")
     void getOrThrowWithMapper() {
         assertThat(
-                assertThrows(Exception.class,() ->
+                assertThrows(Exception.class, () ->
                         Exceptional.withException(
                                 new SQLException(exceptionMessage))
                                 .getOrThrow(e -> new IOException(e.getMessage())))

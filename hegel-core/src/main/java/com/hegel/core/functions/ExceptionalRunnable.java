@@ -34,6 +34,9 @@ public interface ExceptionalRunnable<E extends Exception> extends Runnable {
         }
     }
 
+    /**
+     * Override this method if you wanna catch some of exception
+     */
     default void ifThrowable(E e) {
         Exceptional.throwAsUnchecked(e);
     }
