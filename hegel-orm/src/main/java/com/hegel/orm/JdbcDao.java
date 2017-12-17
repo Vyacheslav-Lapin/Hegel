@@ -2,15 +2,16 @@ package com.hegel.orm;
 
 import com.hegel.core.functions.*;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -259,17 +260,17 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
                 .stream();
     }
 
-    default <T> Collection<T> getObjects(Constructor<T> constructor) {
-        return collect(
-                getQueryString(constructor),
-                resultSet -> ExceptionalFunction.getOrThrowUnchecked(constructor::newInstance,
-                        Arrays.stream(constructor.getParameters())
-                                .map(parameter -> convert(parameter.getType(),
-                                        ExceptionalFunction.getOrThrowUnchecked(
-                                                resultSet::getObject,
-                                                toDbName(parameter.getName()))))
-                                .toArray()),
-                ArrayList<T>::new)
-                .getOrThrowUnchecked();
-    }
+//    default <T> Collection<T> getObjects(Constructor<T> constructor) {
+//        return collect(
+//                getQueryString(constructor),
+//                resultSet -> ExceptionalFunction.getOrThrowUnchecked(constructor::newInstance,
+//                        Arrays.stream(constructor.getParameters())
+//                                .map(parameter -> convert(parameter.getType(),
+//                                        ExceptionalFunction.getOrThrowUnchecked(
+//                                                resultSet::getObject,
+//                                                toDbName(parameter.getName()))))
+//                                .toArray()),
+//                ArrayList::new)
+//                .getOrThrowUnchecked();
+//    }
 }

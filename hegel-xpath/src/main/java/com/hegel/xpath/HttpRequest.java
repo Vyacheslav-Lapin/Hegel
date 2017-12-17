@@ -1,6 +1,5 @@
 package com.hegel.xpath;
 
-import com.sun.net.ssl.internal.ssl.Provider;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -18,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.System.out;
-import static java.security.Security.addProvider;
 import static org.jsoup.Connection.Method.GET;
 
 @SuppressWarnings("WeakerAccess")
@@ -55,7 +53,7 @@ public class HttpRequest {
             try {
                 isTrustToAllCertificatesNotCalled = false;
 
-                addProvider(new Provider());
+//                addProvider(new Provider());
                 SSLContext sc = SSLContext.getInstance("SSL");
                 sc.init(null, new TrustManager[]{new X509TrustManager() {
                     @Override

@@ -4,7 +4,6 @@ buildscript {
     }
     dependencies {
         classpath 'org.junit.platform:junit-platform-gradle-plugin:+'
-//        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0-M1'
     }
 }
 
@@ -15,11 +14,15 @@ subprojects {
     apply plugin: 'java'
 
     sourceCompatibility =
-            targetCompatibility = 1.8
+            targetCompatibility = 9
 
     repositories {
+        // for local libs
+        flatDir { dirs './../lib' }
+
         mavenLocal()
         mavenCentral()
+        jcenter() // BinTray
     }
 
     apply plugin: 'org.junit.platform.gradle.plugin'
@@ -37,7 +40,7 @@ subprojects {
                 'org.apache.logging.log4j:log4j-jul:+',
                 'io.vavr:vavr:+'
 
-        compileOnly 'org.projectlombok:lombok:+',
+        compileOnly ':lombok-edge:', // 'org.projectlombok:lombok:+',
                 'edu.washington.cs.types.checker:checker-framework:+'
 
         testCompileOnly 'org.apiguardian:apiguardian-api:+'
@@ -48,8 +51,9 @@ subprojects {
     }
 }
 
-// type in terminal: ./gradlew wrapper --gradle-version=4.4
+// type in terminal: gradle wrapper --gradle-version=4.4
 task Wrapper(type: Wrapper) {
     description = 'Generates gradlew[.bat] scripts'
     gradleVersion = '4.4'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

@@ -2,7 +2,6 @@ package com.hegel.orm;
 
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
-import org.omg.CORBA.Object;
 
 import java.math.BigDecimal;
 import java.sql.*;
