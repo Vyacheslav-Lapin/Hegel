@@ -16,6 +16,24 @@ subprojects {
     sourceCompatibility =
             targetCompatibility = 9
 
+    apply plugin: 'maven-publish'
+
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
     repositories {
         // for local libs
         flatDir { dirs './../lib' }
