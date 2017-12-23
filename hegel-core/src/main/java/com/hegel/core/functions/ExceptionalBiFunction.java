@@ -7,32 +7,27 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface ExceptionalBiFunction<T, U, R, E extends Exception> extends BiFunction<T, U, Exceptional<R, E>> {
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> R getOrThrowUnchecked(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction,
             T param1, U param2) {
         return exceptionalBiFunction.getOrThrowUnchecked(param1, param2);
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> BiFunction<T, U, R> toUnchecked(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction) {
         return exceptionalBiFunction::getOrThrowUnchecked;
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<T, Function<U, ExceptionalSupplier<R, E>>> curry(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction) {
         return exceptionalBiFunction.curry();
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<T, Function<U, Supplier<R>>> curryUnchecked(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction) {
         return exceptionalBiFunction.curryUnchecked();
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> ExceptionalSupplier<R, E> supply(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction, T param1, U param2) {
         return exceptionalBiFunction.supply(param1, param2);
@@ -44,28 +39,24 @@ public interface ExceptionalBiFunction<T, U, R, E extends Exception> extends BiF
         return exceptionalBiFunction.supplyUnchecked(param1, param2);
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<U, ExceptionalSupplier<R, E>> partialFirst(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction,
             T param1) {
         return exceptionalBiFunction.partialFirst(param1);
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<U, Supplier<R>> partialFirstUnchecked(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction,
             T param1) {
         return exceptionalBiFunction.partialFirstUnchecked(param1);
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<T, ExceptionalSupplier<R, E>> partialSecond(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction,
             U param2) {
         return exceptionalBiFunction.partialSecond(param2);
     }
 
-    @SuppressWarnings("unused")
     static <T, U, R, E extends Exception> Function<T, Supplier<R>> partialSecondUnchecked(
             ExceptionalBiFunction<T, U, R, E> exceptionalBiFunction,
             U param2) {
@@ -99,7 +90,6 @@ public interface ExceptionalBiFunction<T, U, R, E extends Exception> extends BiF
         return apply(param1, param2).getOrThrowUnchecked();
     }
 
-    @SuppressWarnings("unused")
     default BiFunction<T, U, R> toUnchecked() {
         return this::getOrThrowUnchecked;
     }

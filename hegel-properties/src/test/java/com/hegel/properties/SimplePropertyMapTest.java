@@ -1,7 +1,6 @@
 package com.hegel.properties;
 
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
@@ -42,7 +41,6 @@ class SimplePropertyMapTest {
     }
 
     @Test
-    @Disabled
     void getBean() {
 //        SimpleTestPojo simpleTestPojo = PropertyMap.map(CONFIG_FILE_PATH, SimpleTestPojo.class);
 //

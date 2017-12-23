@@ -243,7 +243,7 @@ public interface JdbcDao<D extends JdbcDao<D>> extends Supplier<Connection> {
             Supplier<C> collectionConstructor) {
         return params -> {
             C collection = collectionConstructor.get();
-            mapAndReducePreparedRows(preparedSql, rowMapper, collection::add).call(params);
+            mapAndReducePreparedRows(preparedSql, rowMapper, collection::add).put(params);
             return collection;
         };
     }

@@ -15,14 +15,14 @@ public interface ExceptionalFunction<T, R, E extends Exception> extends Function
         return t -> getOrThrowUnchecked(exceptionalFunction, t);
     }
 
-    static <T, R, E extends Exception> ExceptionalSupplier<R, E> carry(ExceptionalFunction<T, R, E> exceptionalFunction,
-                                                                       T param) {
-        return () -> exceptionalFunction.map(param);
+    static <T, R, E extends Exception> ExceptionalSupplier<R, E> supply(ExceptionalFunction<T, R, E> exceptionalFunction,
+                                                                        T param) {
+        return exceptionalFunction.supply(param);
     }
 
-    static <T, R, E extends Exception> Supplier<R> carryUnchacked(ExceptionalFunction<T, R, E> exceptionalFunction,
-                                                                  T param) {
-        return carry(exceptionalFunction, param)::getOrThrowUnchecked;
+    static <T, R, E extends Exception> Supplier<R> supplyUnchecked(ExceptionalFunction<T, R, E> exceptionalFunction,
+                                                                   T param) {
+        return exceptionalFunction.supplyUnchecked(param);
     }
 
     R map(T t) throws E;
@@ -35,5 +35,17 @@ public interface ExceptionalFunction<T, R, E extends Exception> extends Function
             //noinspection unchecked
             return Exceptional.withException((E) e);
         }
+    }
+
+    default R getOrThrowUnchecked(T param) {
+        return apply(param).getOrThrowUnchecked();
+    }
+
+    default ExceptionalSupplier<R, E> supply(T t) {
+        return () -> map(t);
+    }
+
+    default Supplier<R> supplyUnchecked(T t) {
+        return () -> apply(t).getOrThrowUnchecked();
     }
 }

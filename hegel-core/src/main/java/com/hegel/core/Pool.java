@@ -8,7 +8,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 import static com.hegel.core.functions.ExceptionalSupplier.avoid;
 
@@ -24,10 +23,8 @@ public class Pool<T extends AutoCloseable> implements Supplier<T>, AutoCloseable
         proxyMaker = InvocationHandler.getProxyMakerFor(anInterface);
         freeObjectsQueue = new ArrayBlockingQueue<>(size);
 
-        IntStream.range(0, size)
-                .mapToObj(i -> generator.get())
-                .map(this::proxy)
-                .forEach(freeObjectsQueue::add);
+        for (int i = 0; i < size; i++)
+            freeObjectsQueue.add(proxy(generator.get()));
     }
 
     private T proxy(T t) {
@@ -46,7 +43,7 @@ public class Pool<T extends AutoCloseable> implements Supplier<T>, AutoCloseable
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         isClosing = true;
         freeObjectsQueue.forEach(ExceptionalConsumer.toUncheckedConsumer(T::close));
     }

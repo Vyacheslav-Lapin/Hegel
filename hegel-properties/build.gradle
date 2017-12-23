@@ -1,3 +1,6 @@
 dependencies {
     compile project(":hegel-reflect")
+
+    // H2
+    testRuntime 'com.h2database:h2:+'
 }

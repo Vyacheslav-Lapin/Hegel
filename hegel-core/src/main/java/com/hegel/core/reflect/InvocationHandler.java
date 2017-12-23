@@ -18,7 +18,7 @@ public interface InvocationHandler<T> extends java.lang.reflect.InvocationHandle
     Object apply(T proxy, Method method, Function<T, ?> chain, Object[] args);
 
     @Override
-    default Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    default Object invoke(Object proxy, Method method, Object[] args) {
         if (method.getDeclaringClass() == Object.class)
             switch (method.getName()) {
                 case "equals":
@@ -34,6 +34,7 @@ public interface InvocationHandler<T> extends java.lang.reflect.InvocationHandle
                 default:
                     throw new IllegalStateException(String.valueOf(method));
             }
+
         //noinspection unchecked
         return apply((T) proxy, method, ExceptionalFunction.toUncheckedFunction(t -> method.invoke(t, args)), args);
     }

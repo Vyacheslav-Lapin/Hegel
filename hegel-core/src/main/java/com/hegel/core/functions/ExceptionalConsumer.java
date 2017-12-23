@@ -11,7 +11,6 @@ public interface ExceptionalConsumer<T, E extends Exception> extends Consumer<T>
         return exceptionalConsumer;
     }
 
-    @SuppressWarnings("unused")
     static <T, E extends Exception> void put(ExceptionalConsumer<T, E> exceptionalConsumer, T param) {
         put(exceptionalConsumer, param, RuntimeException::new);
     }

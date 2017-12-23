@@ -1,7 +1,15 @@
 package com.hegel.core.functions;
 
-@FunctionalInterface
-public interface VarConsumer<T> {
+import java.util.function.Consumer;
 
-    void accept(T... t);
+@FunctionalInterface
+public interface VarConsumer<T> extends Consumer<T[]> {
+
+    @Override
+    @SuppressWarnings("unchecked")
+    void accept(T... params);
+
+    default Runnable toRunnable(T... params) {
+        return () -> accept(params);
+    }
 }

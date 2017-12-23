@@ -26,8 +26,8 @@ public interface ExceptionalSupplier<T, E extends Exception> extends Supplier<Ex
 
     T call() throws E;
 
-    @SuppressWarnings("unchecked")
     @Override
+    @SuppressWarnings("unchecked")
     default Exceptional<T, E> get() {
         try {
             return Exceptional.withValue(call());
@@ -40,8 +40,8 @@ public interface ExceptionalSupplier<T, E extends Exception> extends Supplier<Ex
         return get().getOrThrowUnchecked();
     }
 
-    default void executeOrThrowUnchecked() {
-        get().getOrThrowUnchecked();
+    default T executeOrThrowUnchecked() {
+        return get().getOrThrowUnchecked();
     }
 
     default Optional<T> getAsOptional() {
