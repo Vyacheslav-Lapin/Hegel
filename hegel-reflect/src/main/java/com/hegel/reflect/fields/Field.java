@@ -2,12 +2,12 @@ package com.hegel.reflect.fields;
 
 import com.hegel.reflect.BaseType;
 import com.hegel.reflect.Class;
-import io.vavr.control.Try;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 @FunctionalInterface
@@ -26,7 +26,7 @@ public interface Field<C> extends Supplier<java.lang.reflect.Field> {
                                         ObjectField.wrap(field));
     }
 
-    static <C> Try<Field<C>> wrap(String name, Class<C> declaringClass) {
+    static <C> Optional<Field<C>> wrap(String name, Class<C> declaringClass) {
         return declaringClass.getField(name);
     }
 

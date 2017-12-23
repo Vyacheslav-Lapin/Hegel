@@ -1,8 +1,8 @@
 package com.hegel.reflect;
 
+import com.hegel.core.functions.ExceptionalFunction;
 import com.hegel.reflect.fields.Field;
 import com.hegel.reflect.methods.Method;
-import io.vavr.control.Try;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -34,8 +34,8 @@ public interface Class<C> extends Supplier<java.lang.Class<C>> {
     }
 
     @SuppressWarnings("unchecked")
-    default <F extends Field<C>> Try<F> getField(String name) {
-        return Try.of(() -> get().getDeclaredField(name))
+    default <F extends Field<C>> Optional<F> getField(String name) {
+        return Optional.ofNullable(ExceptionalFunction.getOrThrowUnchecked(get()::getDeclaredField, name))
                 .map(Field::wrap);
     }
 
