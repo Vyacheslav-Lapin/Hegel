@@ -1,48 +1,50 @@
 package com.hegel.core;
 
+import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface Test {
+public interface TestUtils {
 
-    static <T> T get(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<T> tOptional) {
-        return get(tOptional, "");
+    String TEST_RESOURCES_PATH = "./src/test/resources/";
+    String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    @NotNull
+    @Contract(pure = true)
+    static String toTestResourceFilePath(String fileName) {
+        return TEST_RESOURCES_PATH + fileName;
     }
 
-    static <T> T get(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<T> tOptional,
-                     String message) {
-        return tOptional.orElseThrow(() -> new AssertionError(message));
-    }
-
+    @NotNull
     @SneakyThrows
-    static String fromSystemOut(Runnable runnable) {
-
+    static String fromSystemOut(@NotNull Runnable task) {
         PrintStream realOut = System.out;
-
-        try (val out = new ByteArrayOutputStream();
-             val printStream = new PrintStream(out)) {
-
-            System.setOut(printStream);
-            runnable.run();
-
-            return new String(out.toByteArray()).intern();
-
-        } finally {
-            System.setOut(realOut);
-        }
+        val out = new ByteArrayOutputStream();
+        @Cleanup val printStream = new PrintStream(out);
+        System.setOut(printStream);
+        task.run();
+        System.setOut(realOut);
+        return new String(out.toByteArray()).intern();
     }
 
-    @SuppressWarnings("unused")
+    static String[] fromSystemOutPrintln (Runnable task) {
+        return fromSystemOut(task).split(LINE_SEPARATOR);
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
     static <T> Matcher<Supplier<T>> isWrapperOf(T wrappedObject) {
-        return new TypeSafeMatcher<Supplier<T>>() {
+        return new TypeSafeMatcher<>() {
             @Override
             protected boolean matchesSafely(Supplier<T> item) {
                 return item.get().equals(wrappedObject);
@@ -55,9 +57,10 @@ public interface Test {
         };
     }
 
-    @SuppressWarnings("unused")
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
     static <T> Matcher<Optional<T>> contains(T expected) {
-        return new TypeSafeMatcher<Optional<T>>() {
+        return new TypeSafeMatcher<>() {
 
             @Override
             protected boolean matchesSafely(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<T> item) {
