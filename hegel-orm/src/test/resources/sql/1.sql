@@ -1,5 +1,5 @@
 CREATE TABLE Person (
-  id         INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  id         IDENTITY,
   first_name VARCHAR(60) NOT NULL,
   last_name  VARCHAR(40) NOT NULL,
   birth_date DATE,

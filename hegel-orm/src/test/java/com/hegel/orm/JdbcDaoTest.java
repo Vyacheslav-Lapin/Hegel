@@ -1,63 +1,64 @@
 package com.hegel.orm;
 
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
-
+import static com.hegel.core.test.Tests.TEST_RESOURCES_PATH;
+import static lombok.AccessLevel.PRIVATE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+@FieldDefaults(level = PRIVATE, makeFinal = true)
 class JdbcDaoTest {
 
-    private static final String RESOURCES_FILE_PATH = "src/test/resources/";
-
-    private static ConnectionPool connectionPool = ConnectionPool.create(RESOURCES_FILE_PATH);
+    static ConnectionPool connectionPool = ConnectionPool.create(TEST_RESOURCES_PATH);
 
     @Test
-    void insertWithStatement() throws SQLException {
+    void insertWithStatement() {
 
         assertThat(
                 connectionPool.executor(
-                        "INSERT INTO Person (first_name, last_name) VALUES ('Jose', 'Eglesias')"
+                        "insert into Person (first_name, last_name) values ('Jose', 'Eglesias')"
                 ).getOrThrowUnchecked(),
 
                 is(1));
 
-        connectionPool.executor("DELETE FROM Person WHERE first_name='Jose' AND last_name='Eglesias'")
+        connectionPool.executor("delete from Person where first_name='Jose' and last_name='Eglesias'")
                 .executeOrThrowUnchecked();
     }
 
     @Test
-    void insertWithPreparedStatement() throws SQLException {
+    void insertWithPreparedStatement() {
+
         assertThat(
                 connectionPool.preparedExecutor(
-                        "INSERT INTO Person (first_name, last_name) VALUES (?,?)")
+                        "insert into Person (first_name, last_name) values (?,?)")
                         .getOrThrowUnchecked("Jose", "Eglesias"),
 
                 is(1)
         );
 
-        connectionPool.executor("DELETE FROM Person WHERE first_name='Jose' AND last_name='Eglesias'")
+        connectionPool.executor("delete from Person where first_name='Jose' and last_name='Eglesias'")
                 .executeOrThrowUnchecked();
     }
 
     @Test
-    void bachInsertWithStatement() throws SQLException {
+    void bachInsertWithStatement() {
 //        assertThat(
 //                connectionPool.executor(
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Anju', 'Eglesias')",
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Sonia', 'Marmeladova')",
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Asha', 'Eglesias')"
+//                        "insert into Person (first_name, last_name) values ('Anju', 'Eglesias')",
+//                        "insert into Person (first_name, last_name) values ('Sonia', 'Marmeladova')",
+//                        "insert into Person (first_name, last_name) values ('Asha', 'Eglesias')"
 //                ).getOrThrowUnchecked(),
 //
 //                is(new int[]{1, 1, 1})
 //        );
 //
 //        connectionPool.executor(
-//                "DELETE FROM Person WHERE first_name='Anju' AND last_name='Eglesias'",
-//                "DELETE FROM Person WHERE first_name='Sonia' AND last_name='Marmeladova'",
-//                "DELETE FROM Person WHERE first_name='Asha' AND last_name='Eglesias'"
+//                "delete from Person where first_name='Anju' and last_name='Eglesias'",
+//                "delete from Person where first_name='Sonia' and last_name='Marmeladova'",
+//                "delete from Person where first_name='Asha' and last_name='Eglesias'"
 //        ).executeOrThrowUnchecked();
     }
 
@@ -65,17 +66,17 @@ class JdbcDaoTest {
     void getObjects() {
 //        assertThat(
 //                connectionPool.executor(
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Anju', 'Eglesias')",
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Sonia', 'Marmeladova')",
-//                        "INSERT INTO Person (first_name, last_name) VALUES ('Asha', 'Eglesias')"
+//                        "insert into Person (first_name, last_name) values ('Anju', 'Eglesias')",
+//                        "insert into Person (first_name, last_name) values ('Sonia', 'Marmeladova')",
+//                        "insert into Person (first_name, last_name) values ('Asha', 'Eglesias')"
 //                ).getOrThrowUnchecked(),
 //
 //                is(new int[]{1, 1, 1}));
 //
 //        connectionPool.executor(
-//                "DELETE FROM Person WHERE first_name='Anju' AND last_name='Eglesias'",
-//                "DELETE FROM Person WHERE first_name='Sonia' AND last_name='Marmeladova'",
-//                "DELETE FROM Person WHERE first_name='Asha' AND last_name='Eglesias'"
+//                "delete from Person where first_name='Anju' and last_name='Eglesias'",
+//                "delete from Person where first_name='Sonia' and last_name='Marmeladova'",
+//                "delete from Person where first_name='Asha' and last_name='Eglesias'"
 //        ).executeOrThrowUnchecked();
 
 //        assertThat(connectionPool.requestObjects(Person.class).collect(toSet()),
@@ -85,7 +86,7 @@ class JdbcDaoTest {
     private void printPersons() {
 //        connectionPool.requestCollection(
 //                rs -> new Person(rs.getInt("id"), rs.getString("name")),
-//                "SELECT id, name FROM Person"
+//                "select id, name from Person"
 //        ).ifPresent(persons -> persons.forEach(System.out::println));
     }
 
@@ -93,6 +94,6 @@ class JdbcDaoTest {
     @AfterEach
     void dropTable() {
 //        printPersons();
-//        connectionPool.executor("DROP TABLE Person");
+//        connectionPool.executor("drop table Person");
     }
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
-import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -21,7 +20,7 @@ class TableTest {
     private JdbcDao<?> dbService;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         Reflect.loadClass("org.h2.Driver");
         dbService = ConnectionPool.create(
                 5,
@@ -44,28 +43,28 @@ class TableTest {
     void calculateSelectDbQuery() {
         assertThat(
                 Table.wrap(User.class).selectQuery(),
-                is("SELECT p.id, p.first_name, p.last_name, p.birth_date, u.email, u.password " +
-                        "FROM User u, Person p"));
+                is("select p.id, p.first_name, p.last_name, p.birth_date, u.email, u.password " +
+                        "from User u, Person p"));
     }
 
     @Test
     @Disabled
     void calculateCreateDbQuery() {
         assertEquals(
-                "CREATE TABLE User (" +
-                        "    id            INT AUTO_INCREMENT," +
-                        "    name          VARCHAR(60)," +
-                        "    login         VARCHAR(20)," +
-                        "    password      VARCHAR(20)," +
-                        "    is_txt_enable BOOL," +
-                        "    PRIMARY KEY (id)" +
+                "create table User (" +
+                        "    id            identity," +
+                        "    name          varchar(60)," +
+                        "    login         varchar(20)," +
+                        "    password      varchar(20)," +
+                        "    is_txt_enable bool," +
+                        "    primary key (id)" +
                         ")",
                 Table.wrap(User.class).sqlCreateQuery());
     }
 
     @Test
     @Disabled
-    void sqlCreateQueryXML() throws Exception {
+    void sqlCreateQueryXML() {
         Table<User> userTable = Table.wrap(User.class);
 //        userTable.toLiquibaseXML(new FileWriter("output2.xml"));
         StringWriter writer = new StringWriter();
@@ -75,7 +74,7 @@ class TableTest {
 
     @Test
     @Disabled
-    void getFromDB() throws ClassNotFoundException, SQLException {
+    void getFromDB() {
         Class<User> userClass = Class.wrap(User.class);
 //        userClass.fromDB()
     }

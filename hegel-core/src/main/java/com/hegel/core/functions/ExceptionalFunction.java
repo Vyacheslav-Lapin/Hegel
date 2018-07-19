@@ -1,26 +1,31 @@
 package com.hegel.core.functions;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface ExceptionalFunction<T, R, E extends Exception> extends Function<T, Exceptional<R, E>> {
 
-    static <T, R, E extends Exception> R getOrThrowUnchecked(ExceptionalFunction<T, R, E> exceptionalFunction,
+    static <T, R, E extends Exception> R getOrThrowUnchecked(@NotNull ExceptionalFunction<T, R, E> exceptionalFunction,
                                                              T param) {
         return exceptionalFunction.apply(param).getOrThrowUnchecked();
     }
 
+    @NotNull
+    @Contract(pure = true)
     static <T, R, E extends Exception> Function<T, R> toUncheckedFunction(ExceptionalFunction<T, R, E> exceptionalFunction) {
         return t -> getOrThrowUnchecked(exceptionalFunction, t);
     }
 
-    static <T, R, E extends Exception> ExceptionalSupplier<R, E> supply(ExceptionalFunction<T, R, E> exceptionalFunction,
+    static <T, R, E extends Exception> ExceptionalSupplier<R, E> supply(@NotNull ExceptionalFunction<T, R, E> exceptionalFunction,
                                                                         T param) {
         return exceptionalFunction.supply(param);
     }
 
-    static <T, R, E extends Exception> Supplier<R> supplyUnchecked(ExceptionalFunction<T, R, E> exceptionalFunction,
+    static <T, R, E extends Exception> Supplier<R> supplyUnchecked(@NotNull ExceptionalFunction<T, R, E> exceptionalFunction,
                                                                    T param) {
         return exceptionalFunction.supplyUnchecked(param);
     }

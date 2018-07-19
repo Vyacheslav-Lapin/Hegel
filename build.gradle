@@ -14,7 +14,7 @@ subprojects {
     apply plugin: 'java'
 
     sourceCompatibility =
-            targetCompatibility = 9
+            targetCompatibility = 10
 
     apply plugin: 'maven-publish'
 
@@ -35,17 +35,8 @@ subprojects {
     }
 
     repositories {
-        // for local libs
-        flatDir { dirs './../lib' }
         mavenLocal()
         mavenCentral()
-        jcenter() // BinTray
-    }
-
-    apply plugin: 'org.junit.platform.gradle.plugin'
-
-    junitPlatform {
-        logManager 'org.apache.logging.log4j.jul.LogManager'
     }
 
     configurations {
@@ -56,22 +47,26 @@ subprojects {
         compile 'org.apache.logging.log4j:log4j-core:+',
                 'org.apache.logging.log4j:log4j-jul:+'
 
-        compileOnly ':lombok-edge:', // 'org.projectlombok:lombok:+',
-                'edu.washington.cs.types.checker:checker-framework:+'
+        compileOnly 'edu.washington.cs.types.checker:checker-framework:+',
+                'org.jetbrains:annotations:+',
+                'org.projectlombok:lombok:+'
 
+        testCompile 'org.junit.jupiter:junit-jupiter-params:+',
+                'org.assertj:assertj-core:+',
+                'org.hamcrest:java-hamcrest:+',
+                'org.mockito:mockito-core:+'
+
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:+'
+
+        // To avoid compiler warnings about @API annotations in JUnit code
         testCompileOnly 'org.apiguardian:apiguardian-api:+'
-
-        testCompile 'org.junit.jupiter:junit-jupiter-api:+',
-                'org.junit.jupiter:junit-jupiter-engine:+',
-                'org.hamcrest:java-hamcrest:+'
     }
 }
 
-// type in terminal: gradle wrapper --gradle-version=4.4.1
-task Wrapper(type: Wrapper) {
+// type in terminal (to install): gradle wrapper --gradle-version=4.9
+// (or to upgrade) ./gradlew wrapper --gradle-version=4.9
+task wrapper(type: Wrapper) {
     description = 'Generates gradlew[.bat] scripts'
-    gradleVersion = '4.4.1'
+    gradleVersion = '4.9'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
-
-
