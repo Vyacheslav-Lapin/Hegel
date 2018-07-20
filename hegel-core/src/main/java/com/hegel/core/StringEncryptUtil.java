@@ -2,6 +2,7 @@ package com.hegel.core;
 
 
 import com.hegel.core.functions.ExceptionalFunction;
+import lombok.val;
 
 import java.security.MessageDigest;
 
@@ -19,7 +20,7 @@ public interface StringEncryptUtil {
 
         byte[] bs = ENCRYPTOR.digest(s.getBytes());
 
-        StringBuilder stringBuilder = new StringBuilder();
+        val stringBuilder = new StringBuilder();
 
         //hex encode the digest
         for (byte b : bs) {
